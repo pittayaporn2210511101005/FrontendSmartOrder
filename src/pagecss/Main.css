@@ -1,0 +1,626 @@
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800;900&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Prompt", sans-serif;
+  background: #f4f7fb;
+  color: #0f172a;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: "Prompt", sans-serif;
+}
+
+.dashboard {
+  min-height: 100vh;
+  display: flex;
+  background: #f4f7fb;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 300px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0052d9 0%, #003b9e 100%);
+  color: #fff;
+  padding: 16px 10px;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+.sidebar-logo {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.logo-box {
+  width: 70px;
+  height: 70px;
+  border-radius: 12px;
+  background: #ff8a00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 8px;
+  font-size: 40px;
+}
+
+.sidebar-logo h2 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.sidebar-logo p {
+  margin: 4px 0 0;
+  font-size: 20px;
+  font-weight: 500;
+  opacity: 0.95;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.menu-item {
+  height: 44px;
+  border-radius: 8px;
+  color: #ffffff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 0 20px;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.menu-item svg {
+  font-size: 25px;
+  flex-shrink: 0;
+}
+
+.menu-item.active {
+  background: #1d6dff;
+}
+
+.menu-item:hover {
+  background: rgba(255, 8, 8, 0.987);
+}
+
+.logout-btn {
+  margin-top: auto;
+  height: 46px;
+  border: none;
+  background: transparent;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px;
+  font-size: 20px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.content {
+  width: calc(100vw - 300px);
+  margin-left: 300px;
+  padding: 20px 24px;
+}
+
+/* Header */
+.dashboard-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.dashboard-header h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #0b1f69;
+  font-weight: 700;
+}
+
+.dashboard-header p {
+  margin: 6px 0 0;
+  font-size: 20px;
+  color: #334155;
+  font-weight: 400;
+}
+
+.date-box {
+  width: 220px;
+  height: 56px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #dfe7f3;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 14px;
+  box-shadow: 0 5px 16px rgba(15, 23, 42, 0.05);
+}
+
+.date-box > svg:first-child {
+  color: #0052ff;
+  font-size: 30px;
+}
+
+.date-box strong {
+  display: block;
+  font-size: 14px;
+  color: #0b1f69;
+  font-weight: 600;
+}
+
+.date-box span {
+  display: block;
+  font-size: 14px;
+  margin-top: 2px;
+  color: #111827;
+  font-weight: 400;
+}
+
+.chevron {
+  margin-left: auto;
+  font-size: 14px;
+  color: #0b1f69;
+}
+
+/* ช่อง4ช่องละ */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1.2fr); /* แต่ละ card กว้างขึ้น */
+  gap: 10px;
+}
+
+.summary-card {
+    min-height: 98px;
+    padding: 5px 5px;
+  }
+
+
+.card-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 999px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+  margin-right: 13px;
+}
+
+.card-icon.blue {
+  background: #0052ff;
+}
+
+.card-icon.green {
+  background: #0aa342;
+}
+
+.card-icon.orange {
+  background: #ff8800;
+}
+
+.card-icon.red {
+  background: #f2072f;
+}
+
+.card-info {
+  min-width: 0;
+}
+
+.card-info h3 {
+  margin: 0 0 5px;
+  font-size: 19px;
+  color: #0f172a;
+  font-weight: 500;
+}
+
+.card-value {
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 700;
+  color: #0052ff;
+}
+
+.summary-card:nth-child(2) .card-value {
+  color: #0aa342;
+}
+
+.summary-card:nth-child(3) .card-value {
+  color: #ff8800;
+}
+
+.summary-card:nth-child(4) .card-value {
+  color: #f2072f;
+}
+
+.card-value span {
+  font-size: 16px;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.card-info p {
+  margin: 7px 0 0;
+  font-size: 17px;
+  color: #475569;
+  font-weight: 400;
+}
+
+.mini-chart {
+  margin-left: auto;
+  align-self: flex-end;
+  display: flex;
+  align-items: end;
+  gap: 4px;
+  height: 34px;
+  flex-shrink: 0;
+}
+
+.mini-chart span {
+  width: 5px;
+  border-radius: 999px;
+  opacity: 0.38;
+}
+
+.mini-chart span:nth-child(1) {
+  height: 11px;
+}
+
+.mini-chart span:nth-child(2) {
+  height: 19px;
+}
+
+.mini-chart span:nth-child(3) {
+  height: 27px;
+}
+
+.mini-chart span:nth-child(4) {
+  height: 34px;
+}
+
+.mini-chart.blue span {
+  background: #0052ff;
+}
+
+.mini-chart.green span {
+  background: #0aa342;
+}
+
+.mini-chart.orange span {
+  background: #ff8800;
+}
+
+.mini-chart.red span {
+  background: #f2072f;
+}
+
+/* กราฟ*/
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px; /* กราฟ | รายงาน */
+  gap: 30px;  
+  align-items: start;
+  min-height: 100vh;
+}
+.panel {
+  background: #ffffff;
+  border: 1px solid #dfe7f3;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+}
+
+/* Sales panel */
+.sales-panel {
+  height: auto;
+  min-height: 500px; /* กราฟสูงเพียงพอ */
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.panel h2 {
+  margin: 0;
+  color: #0b1f69;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.select-btn {
+  height: 36px;
+  min-width: 112px;
+  border: 1px solid #d8e2f0;
+  background: #ffffff;
+  color: #0b1f69;
+  border-radius: 7px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.select-btn svg:first-child {
+  color: #0052ff;
+}
+
+.select-btn select,
+.report-select select {
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #690b0b;
+  font-size: 20px;
+  font-weight: 300;
+  cursor: pointer;
+  appearance: none;
+}
+
+/* กราฟ */
+.chart-area {
+  display: flex;
+  height: 450px; /* กราฟสูงพอ */
+}
+.y-labels {
+  width: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0b1f69;
+}
+
+.chart {
+  flex: 1;
+  height: 100%;
+  position: relative;
+  background-image:
+    linear-gradient(#e5edf8 1px, transparent 1px),
+    linear-gradient(90deg, #eaf1fb 1px, transparent 1px);
+  background-size: 100% 72px, 80px 100%;
+}
+
+.chart svg {/*ตัวกราฟจริง*/
+  width: 100%;
+  height: 100%; /* สูงเต็ม .chart */
+}
+
+.x-labels {
+  height: 40px;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  align-items: center;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0b1f69;
+}
+
+/* Right */
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.report-panel {
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(15,23,42,0.05);
+}
+
+.report-select {
+  width: 100%;
+  height: 48px;
+  margin-top: 14px;
+  border: 1px solid #d8e2f0;
+  background: #ffffff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 12px;
+  color: #0b1f69;
+}
+
+.report-select > svg:first-child {
+  color: #0052ff;
+  font-size: 25px;
+}
+
+.report-select div {
+  flex: 1;
+  text-align: left;
+}
+
+.report-select span {
+  display: block;
+  font-size: 18px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.export-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.export-row button {
+  flex: 1;
+  height: 38px;
+  border-radius: 7px;
+  border: none;
+  color: #ffffff;
+  font-size: 19px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.excel-btn {
+  background: #0aa342;
+}
+
+.pdf-btn {
+  background: #e30000;
+}
+
+.excel-btn:hover {
+  background: #078b38;
+}
+
+.pdf-btn:hover {
+  background: #c90000;
+}
+
+/* สินค้าขายดี */
+.top-panel {
+  padding: 20px;
+  min-height: 242px;
+}
+
+.product-list {
+  margin-top: 14px;
+}
+
+.product-item {
+  min-height: 35px;
+  display: grid;
+  grid-template-columns: 26px 28px minmax(0, 1fr) 64px;
+  align-items: center;
+  gap: 7px;
+  border-radius: 7px;
+  padding: 0 6px;
+}
+
+.product-item:hover {
+  background: #f4f7fb;
+}
+
+.product-no {
+  width: 23px;
+  height: 23px;
+  background: #f0f5ff;
+  color: #0b1f69;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.product-icon {
+  font-size: 25px;
+}
+
+.product-name {
+  font-size: 15px;
+  color: #0b1f69;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-item strong {
+  text-align: right;
+  color: #0052ff;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+
+/* Summary Cards - Responsive สำหรับหน้าจอกลาง */
+@media (max-width: 1180px) {
+  /* ===== Summary Cards ===== */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.summary-card {
+  min-height: 98px;
+  background: #ffffff;
+  border: 1px solid #dfe7f3;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 16px 14px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+  overflow: hidden;
+}
+
+.card-icon {
+  width: 50px;
+  height: 50px;
+  font-size: 26px;
+   
+}
+
+.card-info h3 {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.card-value {
+  font-size: 22px;
+}
+
+.card-value span {
+  font-size: 13px;
+}
+
+.card-info p {
+  font-size: 13px;
+}
+
+.mini-chart {
+  margin-left: auto;
+  align-self: flex-end;
+  display: flex;
+  align-items: end;
+  gap: 4px;
+  height: 34px;
+}
+  
+  
+}
