@@ -15,6 +15,7 @@ import {
   FaCheckCircle,
   FaMoneyBillWave,
   FaChartLine,
+  FaCube,
 } from "react-icons/fa";
 import "../pagecss/WebOrder.css";
 
@@ -26,7 +27,6 @@ function WebOrder() {
   const [orders, setOrders] = useState([]);
   const [details, setDetails] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
   const [dateFilter, setDateFilter] = useState("today");
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
@@ -87,9 +87,7 @@ function WebOrder() {
     return list.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
   };
 
-  const getOrderStatus = (order) => {
-    return order.status || "สำเร็จ";
-  };
+   
 
   const getProfit = (orderId) => {
     const list = details[orderId] || [];
@@ -123,16 +121,13 @@ function WebOrder() {
 
         return getOrderCode(order).toLowerCase().includes(keyword);
       })
-      .filter((order) => {
-        if (!statusFilter) return true;
-        return getOrderStatus(order) === statusFilter;
-      })
+      
       .filter((order) => {
         if (dateFilter === "today") return isToday(order.createdAt);
         return true;
       })
       .sort((a, b) => Number(b.id || 0) - Number(a.id || 0));
-  }, [orders, searchTerm, statusFilter, dateFilter, details]);
+  }, [orders, searchTerm, dateFilter, details]);
 
   const todayOrders = orders.filter((order) => isToday(order.createdAt));
   const todaySales = todayOrders.reduce(
@@ -141,6 +136,10 @@ function WebOrder() {
   );
   const todayProfit = todayOrders.reduce(
     (sum, order) => sum + getProfit(order.id),
+    0
+  );
+  const todayProductQty = todayOrders.reduce(
+    (sum, order) => sum + getOrderItemsCount(order.id),
     0
   );
    
@@ -238,7 +237,21 @@ function WebOrder() {
               <small>บาท</small>
             </div>
           </div>
+
+          <div className="weborder-summary-card purple">
+  <div className="summary-icon">
+    <FaCube />
+  </div>
+
+  <div>
+    <span>สินค้าที่ขายวันนี้</span>
+    <strong>{todayProductQty}</strong>
+    <small>ชิ้น</small>
+  </div>
+</div>
         </section>
+
+        
 
         <section className="weborder-table-section">
           <div className="weborder-filter-row">
@@ -251,13 +264,6 @@ function WebOrder() {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-
-            <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-              <option value="">สถานะทั้งหมด</option>
-              <option value="สำเร็จ">สำเร็จ</option>
-              <option value="รอดำเนินการ">รอดำเนินการ</option>
-              <option value="ยกเลิก">ยกเลิก</option>
-            </select>
 
             <select value={dateFilter} onChange={(e) => setDateFilter(e.target.value)}>
               <option value="today">วันนี้</option>
@@ -283,7 +289,6 @@ function WebOrder() {
                 <th>จำนวนสินค้า</th>
                 <th>ยอดขาย</th>
                 <th>กำไร</th>
-                <th>สถานะ</th>
                 <th>จัดการ</th>
               </tr>
             </thead>
@@ -303,7 +308,7 @@ function WebOrder() {
                 </tr>
               ) : (
                 filteredOrders.map((order) => {
-                  const status = getOrderStatus(order);
+                   
 
                   return (
                     <tr key={order.id}>
@@ -312,12 +317,7 @@ function WebOrder() {
                       <td>{getOrderItemsCount(order.id)} รายการ</td>
                       <td className="money">฿{Number(order.totalSell || 0).toLocaleString()}</td>
                       <td className="profit">฿{getProfit(order.id).toLocaleString()}</td>
-                      <td>
-                        <span className={`order-status ${status}`}>
-                          {status === "สำเร็จ" && <FaCheckCircle />}
-                          {status}
-                        </span>
-                      </td>
+                       
                       <td>
                         <button
                           className="detail-btn"

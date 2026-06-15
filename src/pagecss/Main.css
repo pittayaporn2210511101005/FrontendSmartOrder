@@ -24,7 +24,10 @@ textarea {
   background: #f4f7fb;
 }
 
-/* Sidebar */
+/* =========================
+   Sidebar
+========================= */
+
 .sidebar {
   width: 300px;
   min-height: 100vh;
@@ -44,27 +47,27 @@ textarea {
 }
 
 .logo-box {
-  width: 70px;
-  height: 70px;
-  border-radius: 12px;
+  width: 76px;
+  height: 76px;
+  border-radius: 14px;
   background: #ff8a00;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 8px;
-  font-size: 40px;
+  font-size: 42px;
 }
 
 .sidebar-logo h2 {
   margin: 0;
-  font-size: 30px;
-  font-weight: 700;
+  font-size: 34px;
+  font-weight: 800;
 }
 
 .sidebar-logo p {
   margin: 4px 0 0;
-  font-size: 20px;
-  font-weight: 500;
+  font-size: 21px;
+  font-weight: 600;
   opacity: 0.95;
 }
 
@@ -75,7 +78,7 @@ textarea {
 }
 
 .menu-item {
-  height: 44px;
+  height: 50px;
   border-radius: 8px;
   color: #ffffff;
   text-decoration: none;
@@ -83,12 +86,12 @@ textarea {
   align-items: center;
   gap: 22px;
   padding: 0 20px;
-  font-size: 20px;
-  font-weight: 500;
+  font-size: 22px;
+  font-weight: 600;
 }
 
 .menu-item svg {
-  font-size: 25px;
+  font-size: 27px;
   flex-shrink: 0;
 }
 
@@ -97,12 +100,12 @@ textarea {
 }
 
 .menu-item:hover {
-  background: rgba(255, 8, 8, 0.987);
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .logout-btn {
   margin-top: auto;
-  height: 46px;
+  height: 50px;
   border: none;
   background: transparent;
   color: #ffffff;
@@ -110,42 +113,50 @@ textarea {
   align-items: center;
   gap: 12px;
   padding: 0 12px;
-  font-size: 20px;
-  font-weight: 500;
+  font-size: 22px;
+  font-weight: 600;
   cursor: pointer;
 }
+
+/* =========================
+   Content
+========================= */
 
 .content {
   width: calc(100vw - 300px);
   margin-left: 300px;
   padding: 20px 24px;
+  background: #f4f7fb;
 }
 
-/* Header */
+/* =========================
+   Header
+========================= */
+
 .dashboard-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
 .dashboard-header h1 {
   margin: 0;
-  font-size: 28px;
+  font-size: 34px;
   color: #0b1f69;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .dashboard-header p {
   margin: 6px 0 0;
-  font-size: 20px;
+  font-size: 22px;
   color: #334155;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 .date-box {
-  width: 220px;
-  height: 56px;
+  width: 250px;
+  height: 62px;
   border-radius: 10px;
   background: #ffffff;
   border: 1px solid #dfe7f3;
@@ -154,26 +165,27 @@ textarea {
   gap: 12px;
   padding: 0 14px;
   box-shadow: 0 5px 16px rgba(15, 23, 42, 0.05);
+  cursor: pointer;
 }
 
 .date-box > svg:first-child {
   color: #0052ff;
-  font-size: 30px;
+  font-size: 32px;
 }
 
 .date-box strong {
   display: block;
-  font-size: 14px;
+  font-size: 16px;
   color: #0b1f69;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .date-box span {
   display: block;
-  font-size: 14px;
+  font-size: 15px;
   margin-top: 2px;
   color: #111827;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 .chevron {
@@ -182,30 +194,40 @@ textarea {
   color: #0b1f69;
 }
 
-/* ช่อง4ช่องละ */
+/* =========================
+   Summary Cards
+========================= */
+
 .summary-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1.2fr); /* แต่ละ card กว้างขึ้น */
-  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
 .summary-card {
-    min-height: 98px;
-    padding: 5px 5px;
-  }
-
+  min-height: 112px;
+  background: #ffffff;
+  border: 1px solid #dfe7f3;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 18px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+  overflow: hidden;
+}
 
 .card-icon {
-  width: 50px;
-  height: 50px;
+  width: 58px;
+  height: 58px;
   border-radius: 999px;
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
+  font-size: 30px;
   flex-shrink: 0;
-  margin-right: 13px;
+  margin-right: 16px;
 }
 
 .card-icon.blue {
@@ -229,16 +251,16 @@ textarea {
 }
 
 .card-info h3 {
-  margin: 0 0 5px;
-  font-size: 19px;
+  margin: 0 0 6px;
+  font-size: 20px;
   color: #0f172a;
-  font-weight: 500;
+  font-weight: 700;
 }
 
 .card-value {
-  font-size: 28px;
+  font-size: 34px;
   line-height: 1;
-  font-weight: 700;
+  font-weight: 900;
   color: #0052ff;
 }
 
@@ -255,16 +277,16 @@ textarea {
 }
 
 .card-value span {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 17px;
+  font-weight: 700;
   margin-left: 4px;
 }
 
 .card-info p {
-  margin: 7px 0 0;
-  font-size: 17px;
+  margin: 8px 0 0;
+  font-size: 16px;
   color: #475569;
-  font-weight: 400;
+  font-weight: 600;
 }
 
 .mini-chart {
@@ -315,14 +337,17 @@ textarea {
   background: #f2072f;
 }
 
-/* กราฟ*/
+/* =========================
+   Main Grid
+========================= */
+
 .main-grid {
   display: grid;
-  grid-template-columns: 1fr 360px; /* กราฟ | รายงาน */
-  gap: 30px;  
+  grid-template-columns: minmax(0, 1fr) 455px;
+  gap: 16px;
   align-items: start;
-  min-height: 100vh;
 }
+
 .panel {
   background: #ffffff;
   border: 1px solid #dfe7f3;
@@ -330,11 +355,14 @@ textarea {
   box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
 }
 
-/* Sales panel */
+/* =========================
+   Sales Chart Panel
+========================= */
+
 .sales-panel {
   height: auto;
-  min-height: 500px; /* กราฟสูงเพียงพอ */
-  padding: 20px;
+  min-height: 440px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
 }
@@ -343,60 +371,42 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
+  gap: 12px;
 }
 
 .panel h2 {
   margin: 0;
   color: #0b1f69;
-  font-size: 30px;
-  font-weight: 700;
+  font-size: 32px;
+  font-weight: 800;
 }
 
-.select-btn {
-  height: 36px;
-  min-width: 112px;
+.chart-select {
+  height: 42px;
   border: 1px solid #d8e2f0;
-  background: #ffffff;
+  border-radius: 10px;
+  padding: 0 12px;
+  font-size: 16px;
+  font-weight: 800;
   color: #0b1f69;
-  border-radius: 7px;
-  padding: 0 10px;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 20px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.select-btn svg:first-child {
-  color: #0052ff;
-}
-
-.select-btn select,
-.report-select select {
-  border: none;
+  background: #fff;
   outline: none;
-  background: transparent;
-  color: #690b0b;
-  font-size: 20px;
-  font-weight: 300;
   cursor: pointer;
-  appearance: none;
 }
 
-/* กราฟ */
 .chart-area {
   display: flex;
-  height: 450px; /* กราฟสูงพอ */
+  height: 370px;
 }
+
 .y-labels {
-  width: 50px;
+  width: 56px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 800;
   color: #0b1f69;
 }
 
@@ -410,9 +420,9 @@ textarea {
   background-size: 100% 72px, 80px 100%;
 }
 
-.chart svg {/*ตัวกราฟจริง*/
+.chart svg {
   width: 100%;
-  height: 100%; /* สูงเต็ม .chart */
+  height: 100%;
 }
 
 .x-labels {
@@ -421,28 +431,38 @@ textarea {
   grid-template-columns: repeat(12, 1fr);
   align-items: center;
   text-align: center;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 800;
   color: #0b1f69;
 }
 
-/* Right */
+/* =========================
+   Right Column
+========================= */
+
 .right-column {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
+}
+
+.report-panel,
+.top-panel {
+  width: 100%;
+  overflow: hidden;
 }
 
 .report-panel {
   padding: 20px;
-  background: #fff;
+  background: #ffffff;
   border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(15,23,42,0.05);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
 }
 
 .report-select {
   width: 100%;
-  height: 48px;
+  height: 56px;
   margin-top: 14px;
   border: 1px solid #d8e2f0;
   background: #ffffff;
@@ -454,9 +474,15 @@ textarea {
   color: #0b1f69;
 }
 
+.report-select.fixed {
+  cursor: default;
+  opacity: 1;
+}
+
 .report-select > svg:first-child {
   color: #0052ff;
-  font-size: 25px;
+  font-size: 27px;
+  flex-shrink: 0;
 }
 
 .report-select div {
@@ -466,9 +492,16 @@ textarea {
 
 .report-select span {
   display: block;
-  font-size: 18px;
+  font-size: 17px;
   color: #64748b;
-  font-weight: 500;
+  font-weight: 600;
+}
+
+.report-select strong {
+  display: block;
+  font-size: 19px;
+  color: #0b1f69;
+  font-weight: 800;
 }
 
 .export-row {
@@ -479,12 +512,12 @@ textarea {
 
 .export-row button {
   flex: 1;
-  height: 38px;
+  height: 44px;
   border-radius: 7px;
   border: none;
   color: #ffffff;
-  font-size: 19px;
-  font-weight: 600;
+  font-size: 17px;
+  font-weight: 800;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -509,24 +542,34 @@ textarea {
   background: #c90000;
 }
 
-/* สินค้าขายดี */
+/* =========================
+   Top Products
+========================= */
+
 .top-panel {
   padding: 20px;
-  min-height: 242px;
+  min-height: auto;
+  max-height: 360px;
 }
 
 .product-list {
-  margin-top: 14px;
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .product-item {
-  min-height: 35px;
+  width: 100%;
+  min-height: 54px;
+  max-height: 58px;
   display: grid;
-  grid-template-columns: 26px 28px minmax(0, 1fr) 64px;
+  grid-template-columns: 32px 42px minmax(0, 1fr) 88px;
   align-items: center;
-  gap: 7px;
-  border-radius: 7px;
-  padding: 0 6px;
+  gap: 10px;
+  padding: 7px 8px;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .product-item:hover {
@@ -534,93 +577,161 @@ textarea {
 }
 
 .product-no {
-  width: 23px;
-  height: 23px;
+  width: 28px;
+  height: 28px;
   background: #f0f5ff;
   color: #0b1f69;
   border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.product-item img,
+.product-item .top-product-img,
+.top-product-img {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+  max-width: 40px !important;
+  max-height: 40px !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  border-radius: 8px !important;
+  border: 1px solid #e2e8f0 !important;
+  display: block !important;
+  flex-shrink: 0 !important;
 }
 
 .product-icon {
-  font-size: 25px;
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .product-name {
-  font-size: 15px;
+  min-width: 0;
+  font-size: 17px;
+  font-weight: 700;
   color: #0b1f69;
-  font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .product-item strong {
-  text-align: right;
-  color: #0052ff;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-
-/* Summary Cards - Responsive สำหรับหน้าจอกลาง */
-@media (max-width: 1180px) {
-  /* ===== Summary Cards ===== */
-.summary-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-.summary-card {
-  min-height: 98px;
-  background: #ffffff;
-  border: 1px solid #dfe7f3;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  padding: 16px 14px;
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
-  overflow: hidden;
-}
-
-.card-icon {
-  width: 50px;
-  height: 50px;
-  font-size: 26px;
-   
-}
-
-.card-info h3 {
   font-size: 16px;
-  margin-bottom: 4px;
+  font-weight: 800;
+  color: #0052ff;
+  text-align: right;
+  white-space: nowrap;
 }
 
-.card-value {
-  font-size: 22px;
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 1280px) {
+  .main-grid {
+    grid-template-columns: minmax(0, 1fr) 410px;
+  }
+
+  .panel h2 {
+    font-size: 29px;
+  }
+
+  .product-item {
+    grid-template-columns: 30px 38px minmax(0, 1fr) 82px;
+  }
+
+  .product-item img,
+  .product-item .top-product-img,
+  .top-product-img {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    max-width: 36px !important;
+    max-height: 36px !important;
+  }
+
+  .product-name {
+    font-size: 16px;
+  }
+
+  .product-item strong {
+    font-size: 15px;
+  }
 }
 
-.card-value span {
-  font-size: 13px;
+@media (max-width: 1180px) {
+  .summary-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .summary-card {
+    min-height: 100px;
+    padding: 14px 12px;
+  }
+
+  .card-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 26px;
+  }
+
+  .card-info h3 {
+    font-size: 16px;
+  }
+
+  .card-value {
+    font-size: 26px;
+  }
+
+  .card-value span {
+    font-size: 14px;
+  }
+
+  .card-info p {
+    font-size: 14px;
+  }
+
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .right-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .chart-area {
+    height: 360px;
+  }
 }
 
-.card-info p {
-  font-size: 13px;
-}
+@media (max-width: 900px) {
+  .sidebar {
+    width: 240px;
+  }
 
-.mini-chart {
-  margin-left: auto;
-  align-self: flex-end;
-  display: flex;
-  align-items: end;
-  gap: 4px;
-  height: 34px;
-}
-  
-  
+  .content {
+    width: calc(100vw - 240px);
+    margin-left: 240px;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .right-column {
+    grid-template-columns: 1fr;
+  }
 }

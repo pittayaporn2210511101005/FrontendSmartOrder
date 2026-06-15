@@ -336,3 +336,12 @@
       min-width: 900px;
     }
   }
+
+  .weborder-summary-card.purple .summary-icon {
+    background: #f3e8ff;
+    color: #7c3aed;
+  }
+  
+  .weborder-summary-card.purple strong {
+    color: #7c3aed;
+  }
