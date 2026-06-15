@@ -20,6 +20,9 @@ import AddProduct from "./AddProduct";
 function Products() {
   const navigate = useNavigate();
 
+  const PRODUCT_API = "http://localhost:8089/api/admin/products";
+  const CATEGORY_API = "http://localhost:8089/api/admin/categories";
+
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
 
@@ -39,66 +42,72 @@ function Products() {
     return String(value).trim();
   };
 
-  const normalizeText = (value) => {
-    return normalizeValue(value).toLowerCase();
+  const normalizeText = (value) => normalizeValue(value).toLowerCase();
+
+  const getProductId = (product) => {
+    return product.id ?? product.productId ?? product.product_id;
   };
 
-  const getProductId = (p) => {
-    return p.id ?? p.productId ?? p.product_id;
-  };
-
-  const getProductName = (p) => {
-    return normalizeValue(p.productName ?? p.product_name ?? p.name);
-  };
-
-  const getCategoryIdFromProduct = (p) => {
+  const getProductName = (product) => {
     return normalizeValue(
-      p.category?.id ??
-        p.category?.categoryId ??
-        p.category?.category_id ??
-        p.categoryId ??
-        p.category_id ??
-        p.categoryID
+      product.productName ?? product.product_name ?? product.name
     );
   };
 
-  const getCategoryNameFromProduct = (p) => {
-    if (typeof p.category === "string") {
-      return normalizeValue(p.category);
+  const getCategoryIdFromProduct = (product) => {
+    return normalizeValue(
+      product.category?.id ??
+        product.categoryId ??
+        product.category_id ??
+        product.categoryID
+    );
+  };
+
+  const getCategoryNameFromProduct = (product) => {
+    if (typeof product.category === "string") {
+      return normalizeValue(product.category);
     }
-
+  
     return normalizeValue(
-      p.category?.categoryname ??
-        p.category?.categoryName ??
-        p.category?.category_name ??
-        p.category?.name ??
-        p.categoryname ??
-        p.categoryName ??
-        p.category_name
+      product.category?.categoryname ??
+        product.category?.Categoryname ??
+        product.category?.categoryName ??
+        product.category?.category_name ??
+        product.category?.name ??
+        product.categoryname ??
+        product.Categoryname ??
+        product.categoryName ??
+        product.category_name
     );
   };
 
-  const getCategoryIdFromCategory = (cat) => {
-    if (typeof cat === "string") return "";
+  const getCategoryIdFromCategory = (category) => {
+    if (typeof category === "string") return "";
 
     return normalizeValue(
-      cat.id ?? cat.categoryId ?? cat.category_id ?? cat.categoryID
+      category.id ??
+        category.categoryId ??
+        category.category_id ??
+        category.categoryID
     );
   };
 
-  const getCategoryNameFromCategory = (cat) => {
-    if (typeof cat === "string") return normalizeValue(cat);
+  const getCategoryNameFromCategory = (category) => {
+    if (typeof category === "string") return normalizeValue(category);
 
     return normalizeValue(
-      cat.categoryname ?? cat.categoryName ?? cat.category_name ?? cat.name
+      category.categoryname ??
+        category.categoryName ??
+        category.category_name ??
+        category.name
     );
   };
 
-  const getCategorySelectValue = (cat) => {
-    const categoryId = getCategoryIdFromCategory(cat);
-    const categoryName = getCategoryNameFromCategory(cat);
+  const getCategorySelectValue = (category) => {
+    const id = getCategoryIdFromCategory(category);
+    const name = getCategoryNameFromCategory(category);
 
-    return categoryId || categoryName;
+    return id || name;
   };
 
   const getStatus = (stock, minStockQty = 10) => {
@@ -128,29 +137,29 @@ function Products() {
     try {
       setLoading(true);
 
-      const res = await axios.get("http://localhost:8089/api/admin/products");
+      const res = await axios.get(PRODUCT_API);
       const data = Array.isArray(res.data) ? res.data : [];
 
-      const productsWithStatus = data.map((p) => {
-        const warehouseStock = Number(p.warehouseStock || 0);
-        const storeStock = Number(p.storeStock || 0);
+      const mappedProducts = data.map((product) => {
+        const warehouseStock = Number(product.warehouseStock || 0);
+        const storeStock = Number(product.storeStock || 0);
         const totalStock = warehouseStock + storeStock;
 
         return {
-          ...p,
-          id: getProductId(p),
-          productName: getProductName(p),
+          ...product,
+          id: getProductId(product),
+          productName: getProductName(product),
           warehouseStock,
           storeStock,
           stock: totalStock,
-          status: getStatus(totalStock, p.minStockQty),
-          _categoryId: getCategoryIdFromProduct(p),
-          _categoryName: getCategoryNameFromProduct(p),
-          imageUrl: p.imageUrl || "",
+          status: getStatus(totalStock, product.minStockQty),
+          _categoryId: getCategoryIdFromProduct(product),
+          _categoryName: getCategoryNameFromProduct(product),
+          imageUrl: product.imageUrl || "",
         };
       });
 
-      setProducts(productsWithStatus);
+      setProducts(mappedProducts);
     } catch (error) {
       console.error("โหลดสินค้าไม่สำเร็จ:", error);
       alert("โหลดสินค้าไม่สำเร็จ");
@@ -161,9 +170,8 @@ function Products() {
 
   const loadCategories = async () => {
     try {
-      const res = await axios.get("http://localhost:8089/api/admin/categories");
+      const res = await axios.get(CATEGORY_API);
       const data = Array.isArray(res.data) ? res.data : [];
-
       setCategories(data);
     } catch (error) {
       console.error("โหลดหมวดหมู่ไม่สำเร็จ:", error);
@@ -207,19 +215,15 @@ function Products() {
           return;
         }
 
-        await axios.put(
-          `http://localhost:8089/api/admin/products/${editingProduct.id}`,
-          payload
-        );
-
+        await axios.put(`${PRODUCT_API}/${editingProduct.id}`, payload);
         alert("แก้ไขสินค้าสำเร็จ");
       } else {
-        await axios.post("http://localhost:8089/api/admin/products", payload);
-
+        await axios.post(PRODUCT_API, payload);
         alert("เพิ่มสินค้าสำเร็จ");
       }
 
       await loadProducts();
+      await loadCategories();
       closeProductModal();
     } catch (error) {
       console.error("บันทึกสินค้าไม่สำเร็จ:", error);
@@ -241,9 +245,9 @@ function Products() {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`http://localhost:8089/api/admin/products/${id}`);
-
+      await axios.delete(`${PRODUCT_API}/${id}`);
       await loadProducts();
+      await loadCategories();
       alert("ลบสินค้าสำเร็จ");
     } catch (error) {
       console.error("ลบสินค้าไม่สำเร็จ:", error);
@@ -262,13 +266,12 @@ function Products() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     sessionStorage.clear();
-
     navigate("/login");
   };
 
   const filteredProducts = useMemo(() => {
     const selectedCategoryData = categories.find(
-      (cat) => getCategorySelectValue(cat) === selectedCategory
+      (category) => getCategorySelectValue(category) === selectedCategory
     );
 
     const selectedCategoryId = selectedCategoryData
@@ -280,18 +283,18 @@ function Products() {
       : selectedCategory;
 
     return [...products]
-      .filter((p) => {
-        const productName = normalizeText(p.productName);
+      .filter((product) => {
+        const productName = normalizeText(product.productName);
         const keyword = normalizeText(searchTerm);
 
         if (!keyword) return true;
         return productName.includes(keyword);
       })
-      .filter((p) => {
+      .filter((product) => {
         if (!selectedCategory) return true;
 
-        const productCategoryId = normalizeValue(p._categoryId);
-        const productCategoryName = normalizeValue(p._categoryName);
+        const productCategoryId = normalizeValue(product._categoryId);
+        const productCategoryName = normalizeValue(product._categoryName);
 
         const matchById =
           selectedCategoryId &&
@@ -306,9 +309,9 @@ function Products() {
 
         return matchById || matchByName;
       })
-      .filter((p) => {
+      .filter((product) => {
         if (!selectedStatus) return true;
-        return p.status === selectedStatus;
+        return product.status === selectedStatus;
       })
       .sort((a, b) => {
         if (sortBy === "name") {
@@ -347,6 +350,7 @@ function Products() {
         <nav className="menu">
           <NavLink
             to="/"
+            end
             className={({ isActive }) =>
               isActive ? "menu-item active" : "menu-item"
             }
@@ -415,7 +419,7 @@ function Products() {
           <div className="summary-card ready">
             <span>สินค้าพร้อมขาย</span>
             <strong>
-              {products.filter((p) => p.status === "พร้อมขาย").length}
+              {products.filter((product) => product.status === "พร้อมขาย").length}
             </strong>
             <small>รายการ</small>
           </div>
@@ -423,7 +427,7 @@ function Products() {
           <div className="summary-card low">
             <span>สินค้าใกล้หมด</span>
             <strong>
-              {products.filter((p) => p.status === "ใกล้หมด").length}
+              {products.filter((product) => product.status === "ใกล้หมด").length}
             </strong>
             <small>รายการ</small>
           </div>
@@ -431,7 +435,7 @@ function Products() {
           <div className="summary-card empty">
             <span>สินค้าหมดสต๊อก</span>
             <strong>
-              {products.filter((p) => p.status === "หมดสต๊อก").length}
+              {products.filter((product) => product.status === "หมดสต๊อก").length}
             </strong>
             <small>รายการ</small>
           </div>
@@ -453,9 +457,9 @@ function Products() {
               >
                 <option value="">หมวดหมู่ทั้งหมด</option>
 
-                {categories.map((cat) => {
-                  const categoryValue = getCategorySelectValue(cat);
-                  const categoryName = getCategoryNameFromCategory(cat);
+                {categories.map((category) => {
+                  const categoryValue = getCategorySelectValue(category);
+                  const categoryName = getCategoryNameFromCategory(category);
 
                   return (
                     <option
@@ -478,10 +482,7 @@ function Products() {
                 <option value="หมดสต๊อก">หมดสต๊อก</option>
               </select>
 
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-              >
+              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
                 <option value="latest">เรียงตามล่าสุด</option>
                 <option value="name">เรียงตามชื่อสินค้า</option>
                 <option value="stock">สต็อกน้อยไปมาก</option>
@@ -499,108 +500,117 @@ function Products() {
           </div>
 
           <table className="products-table">
-  <thead>
-    <tr>
-      <th>รูป</th>
-      <th>สินค้า</th>
-      <th>หมวดหมู่</th>
-      <th>ราคาซื้อ</th>
-      <th>ราคาขาย</th>
-      <th>โกดัง</th>
-      <th>หน้าร้าน</th>
-      <th>สต็อกคงเหลือ</th>
-      <th>สถานะ</th>
-      <th>จัดการ</th>
-    </tr>
-  </thead>
+            <thead>
+              <tr>
+                <th>รูป</th>
+                <th>สินค้า</th>
+                <th>หมวดหมู่</th>
+                <th>ราคาซื้อ</th>
+                <th>ราคาขาย</th>
+                <th>โกดัง</th>
+                <th>หน้าร้าน</th>
+                <th>สต็อกคงเหลือ</th>
+                <th>สถานะ</th>
+                <th>จัดการ</th>
+              </tr>
+            </thead>
 
-  <tbody>
-    {loading ? (
-      <tr>
-        <td colSpan="10" className="empty-table">
-          กำลังโหลดข้อมูล...
-        </td>
-      </tr>
-    ) : filteredProducts.length === 0 ? (
-      <tr>
-        <td colSpan="10" className="empty-table">
-          ไม่พบสินค้า
-        </td>
-      </tr>
-    ) : (
-      filteredProducts.map((p) => (
-        <tr key={p.id}>
-          <td>
-            {p.imageUrl ? (
-              <img
-                src={p.imageUrl}
-                alt={p.productName || "สินค้า"}
-                className="product-thumb"
-              />
-            ) : (
-              <div className="product-no-image">ไม่มีรูป</div>
-            )}
-          </td>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan="10" className="empty-table">
+                    กำลังโหลดข้อมูล...
+                  </td>
+                </tr>
+              ) : filteredProducts.length === 0 ? (
+                <tr>
+                  <td colSpan="10" className="empty-table">
+                    ไม่พบสินค้า
+                  </td>
+                </tr>
+              ) : (
+                filteredProducts.map((product) => (
+                  <tr key={product.id}>
+                    <td>
+                      {product.imageUrl ? (
+                        <img
+                          src={product.imageUrl}
+                          alt={product.productName || "สินค้า"}
+                          className="product-thumb"
+                        />
+                      ) : (
+                        <div className="product-no-image">ไม่มีรูป</div>
+                      )}
+                    </td>
 
-          <td>
-            <div className="product-cell">
-              <span>{p.productName || "-"}</span>
-            </div>
-          </td>
+                    <td>
+                      <div className="product-cell">
+                        <span>{product.productName || "-"}</span>
+                      </div>
+                    </td>
 
-          <td className="category-cell">{p._categoryName || "-"}</td>
+                    <td className="category-cell">
+                      {product._categoryName || "-"}
+                    </td>
 
-          <td>
-            <div className="price-cell">
-              <span>{Number(p.buyPrice || 0).toLocaleString()} บาท</span>
-            </div>
-          </td>
+                    <td>
+                      <div className="price-cell">
+                        <span>
+                          {Number(product.buyPrice || 0).toLocaleString()} บาท
+                        </span>
+                      </div>
+                    </td>
 
-          <td>
-            <div className="price-cell">
-              <span>{Number(p.sellPrice || 0).toLocaleString()} บาท</span>
-            </div>
-          </td>
+                    <td>
+                      <div className="price-cell">
+                        <span>
+                          {Number(product.sellPrice || 0).toLocaleString()} บาท
+                        </span>
+                      </div>
+                    </td>
 
-          <td>{Number(p.warehouseStock || 0).toLocaleString()}</td>
+                    <td>{Number(product.warehouseStock || 0).toLocaleString()}</td>
 
-          <td>{Number(p.storeStock || 0).toLocaleString()}</td>
+                    <td>{Number(product.storeStock || 0).toLocaleString()}</td>
 
-          <td className={getStatusClass(p.status)}>{formatStock(p.stock)}</td>
+                    <td className={getStatusClass(product.status)}>
+                      {formatStock(product.stock)}
+                    </td>
 
-          <td>
-            <span className={`status-badge ${getStatusClass(p.status)}`}>
-              {p.status}
-            </span>
-          </td>
+                    <td>
+                      <span
+                        className={`status-badge ${getStatusClass(product.status)}`}
+                      >
+                        {product.status}
+                      </span>
+                    </td>
 
-          <td>
-            <div className="action-row">
-              <button
-                className="edit"
-                type="button"
-                onClick={() => openEditModal(p)}
-                title="แก้ไขสินค้า"
-              >
-                <FaEdit />
-              </button>
+                    <td>
+                      <div className="action-row">
+                        <button
+                          className="edit"
+                          type="button"
+                          onClick={() => openEditModal(product)}
+                          title="แก้ไขสินค้า"
+                        >
+                          <FaEdit />
+                        </button>
 
-              <button
-                className="delete"
-                type="button"
-                onClick={() => handleDeleteProduct(p.id)}
-                title="ลบสินค้า"
-              >
-                <FaTrash />
-              </button>
-            </div>
-          </td>
-        </tr>
-      ))
-    )}
-  </tbody>
-</table>
-           
+                        <button
+                          className="delete"
+                          type="button"
+                          onClick={() => handleDeleteProduct(product.id)}
+                          title="ลบสินค้า"
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
 
           <div className="table-footer">
             แสดง {filteredProducts.length} จาก {products.length} รายการ

@@ -5,6 +5,10 @@ import Login from "./page/Login";
 import Main from "./page/Main";
 import Products from "./page/Products";
 import Categories from "./page/Categories";
+import WebOrder from "./page/WebOrder";
+
+import MobileLogin from "./mobile/MobileLogin";
+import Order from "./mobile/Order";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -15,22 +19,26 @@ function App() {
     setIsLoggedIn(true);
   };
 
-  if (!isLoggedIn) {
-    // ถ้ายังไม่ล็อกอิน แสดงหน้า Login
-    return <Login onLoginSuccess={handleLoginSuccess} />;
-  }
-
-  // ถ้าล็อกอินแล้ว ให้ใช้ Router ครอบทั้งหมด
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Main username={loginName} />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/categories" element={<Categories />} />
+        <Route path="/mobile/login" element={<MobileLogin />} />
+        <Route path="/mobile/order" element={<Order />} />
 
+        {!isLoggedIn ? (
+          <Route
+            path="*"
+            element={<Login onLoginSuccess={handleLoginSuccess} />}
+          />
+        ) : (
+          <>
+            <Route path="/" element={<Main username={loginName} />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/categories" element={<Categories />} />
+            <Route path="/orders" element={<WebOrder />} />
+          </>
+        )}
       </Routes>
-       
-       
     </BrowserRouter>
   );
 }

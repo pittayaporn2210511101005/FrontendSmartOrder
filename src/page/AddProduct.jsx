@@ -65,7 +65,7 @@ function AddProduct({ onAdd, categories = [], mode = "add", initialData = null }
     sellPrice: "",
     warehouseStock: "",
     storeStock: "",
-    minStockQty: "10",
+    minStockQty: "",
     imageUrl: "",
   });
 

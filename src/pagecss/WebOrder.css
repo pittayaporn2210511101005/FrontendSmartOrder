@@ -1,0 +1,338 @@
+.weborder-page {
+    background: #f4f7fb;
+  }
+  
+  .weborder-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  
+  .weborder-summary-card {
+    height: 105px;
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+  }
+  
+  .weborder-summary-card .summary-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0052ff;
+    font-size: 26px;
+  }
+  
+  .weborder-summary-card.blue .summary-icon {
+    background: #eaf1ff;
+  }
+  
+  .weborder-summary-card.green .summary-icon {
+    background: #e7f8ee;
+    color: #0aa342;
+  }
+  
+  .weborder-summary-card.orange .summary-icon {
+    background: #fff2df;
+    color: #ff8800;
+  }
+  
+  .weborder-summary-card.red .summary-icon {
+    background: #ffe7eb;
+    color: #f2072f;
+  }
+  
+  .weborder-summary-card span {
+    display: block;
+    color: #0b1f69;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  
+  .weborder-summary-card strong {
+    color: #0052ff;
+    font-size: 28px;
+    font-weight: 900;
+  }
+  
+  .weborder-summary-card.green strong {
+    color: #0aa342;
+  }
+  
+  .weborder-summary-card.orange strong {
+    color: #ff8800;
+  }
+  
+  .weborder-summary-card.red strong {
+    color: #f2072f;
+  }
+  
+  .weborder-summary-card small {
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 700;
+    margin-left: 4px;
+  }
+  
+  .weborder-table-section {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+  }
+  
+  .weborder-filter-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 110px 110px;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  
+  .weborder-search-box {
+    height: 48px;
+    border: 1px solid #d8e2f0;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    gap: 10px;
+  }
+  
+  .weborder-search-box svg {
+    color: #64748b;
+  }
+  
+  .weborder-search-box input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 15px;
+  }
+  
+  .weborder-filter-row select {
+    height: 48px;
+    border: 1px solid #d8e2f0;
+    border-radius: 10px;
+    padding: 0 12px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #0b1f69;
+  }
+  
+  .search-btn,
+  .reset-btn {
+    height: 48px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+  
+  .search-btn {
+    background: #0052ff;
+    color: #ffffff;
+  }
+  
+  .reset-btn {
+    background: #edf4ff;
+    color: #0052ff;
+  }
+  
+  .weborder-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .weborder-table th {
+    background: #f7faff;
+    color: #0b1f69;
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 15px;
+    font-weight: 900;
+    border-bottom: 1px solid #e5edf8;
+  }
+  
+  .weborder-table td {
+    padding: 13px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    border-bottom: 1px solid #edf2f7;
+    color: #0f172a;
+  }
+  
+  .money,
+  .profit {
+    color: #0aa342 !important;
+    font-weight: 900 !important;
+  }
+  
+  .order-status {
+    min-width: 82px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 900;
+  }
+  
+  .order-status.สำเร็จ {
+    background: #e7f8ee;
+    color: #0aa342;
+  }
+  
+  .order-status.ยกเลิก {
+    background: #ffe7eb;
+    color: #f2072f;
+  }
+  
+  .order-status.รอดำเนินการ {
+    background: #fff2df;
+    color: #ff8800;
+  }
+  
+  .detail-btn {
+    height: 36px;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: 1px solid #0052ff;
+    background: #ffffff;
+    color: #0052ff;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+  
+  .empty-table {
+    text-align: center;
+    color: #64748b;
+    padding: 28px !important;
+  }
+  
+  .weborder-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .weborder-modal {
+    width: 480px;
+    max-width: calc(100% - 32px);
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 22px;
+    position: relative;
+  }
+  
+  .weborder-modal .modal-close {
+    position: absolute;
+    right: 16px;
+    top: 14px;
+    border: none;
+    background: transparent;
+    font-size: 30px;
+    cursor: pointer;
+  }
+  
+  .weborder-modal h2 {
+    margin: 0;
+    color: #0b1f69;
+    font-size: 24px;
+  }
+  
+  .modal-subtitle {
+    margin: 4px 0 16px;
+    color: #64748b;
+    font-weight: 700;
+  }
+  
+  .order-detail-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .order-detail-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .order-detail-item strong {
+    color: #0b1f69;
+  }
+  
+  .order-detail-item p {
+    margin: 4px 0 0;
+    color: #64748b;
+    font-size: 14px;
+  }
+  
+  .order-detail-item span {
+    color: #0052ff;
+    font-weight: 900;
+  }
+  
+  .modal-total {
+    margin-top: 16px;
+    background: #eaf1ff;
+    padding: 14px;
+    border-radius: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .modal-total span {
+    color: #0b1f69;
+    font-weight: 900;
+  }
+  
+  .modal-total strong {
+    color: #0052ff;
+    font-size: 26px;
+    font-weight: 900;
+  }
+  
+  @media (max-width: 1100px) {
+    .weborder-summary-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  
+    .weborder-filter-row {
+      grid-template-columns: 1fr;
+    }
+  
+    .weborder-table-section {
+      overflow-x: auto;
+    }
+  
+    .weborder-table {
+      min-width: 900px;
+    }
+  }
