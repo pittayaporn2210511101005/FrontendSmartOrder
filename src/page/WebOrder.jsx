@@ -11,8 +11,6 @@ import {
   FaSearch,
   FaRedoAlt,
   FaEye,
-  FaTimesCircle,
-  FaCheckCircle,
   FaMoneyBillWave,
   FaChartLine,
   FaCube,
@@ -35,19 +33,22 @@ function WebOrder() {
   const loadOrders = async () => {
     try {
       setLoading(true);
+
       const res = await axios.get(ORDER_API);
       const data = Array.isArray(res.data) ? res.data : [];
       setOrders(data);
 
       const detailMap = {};
+
       for (const order of data) {
         const orderId = order.id;
+
         try {
           const detailRes = await axios.get(`${ORDER_API}/${orderId}/details`);
           detailMap[orderId] = Array.isArray(detailRes.data)
             ? detailRes.data
             : [];
-        } catch {
+        } catch (error) {
           detailMap[orderId] = [];
         }
       }
@@ -73,6 +74,7 @@ function WebOrder() {
     if (!dateValue) return "-";
 
     const date = new Date(dateValue);
+
     return date.toLocaleString("th-TH", {
       day: "2-digit",
       month: "2-digit",
@@ -82,12 +84,20 @@ function WebOrder() {
     });
   };
 
-  const getOrderItemsCount = (orderId) => {
+  // จำนวนรายการ เช่น 0 รายการ, 1 รายการ, 3 รายการ
+  const getOrderDetailCount = (orderId) => {
     const list = details[orderId] || [];
-    return list.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+    return list.length;
   };
 
-   
+  // จำนวนชิ้นรวม เช่น ขาย 46 ชิ้น
+  const getOrderItemsQty = (orderId) => {
+    const list = details[orderId] || [];
+
+    return list.reduce((sum, item) => {
+      return sum + Number(item.quantity || 0);
+    }, 0);
+  };
 
   const getProfit = (orderId) => {
     const list = details[orderId] || [];
@@ -96,8 +106,24 @@ function WebOrder() {
       const sell = Number(item.sellingPrice || 0);
       const buy = Number(item.product?.buyPrice || 0);
       const qty = Number(item.quantity || 0);
+
       return sum + (sell - buy) * qty;
     }, 0);
+  };
+
+  const getDisplayStatus = (order) => {
+    const totalSell = Number(order.totalSell || 0);
+    const itemCount = getOrderDetailCount(order.id);
+
+    if (order.status === "FAILED") {
+      return "FAILED";
+    }
+
+    if (totalSell > 0 || itemCount > 0) {
+      return "SUCCESS";
+    }
+
+    return "FAILED";
   };
 
   const isToday = (dateValue) => {
@@ -116,33 +142,36 @@ function WebOrder() {
   const filteredOrders = useMemo(() => {
     return orders
       .filter((order) => {
-        const keyword = searchTerm.toLowerCase();
+        const keyword = searchTerm.toLowerCase().trim();
+
         if (!keyword) return true;
 
         return getOrderCode(order).toLowerCase().includes(keyword);
       })
-      
       .filter((order) => {
-        if (dateFilter === "today") return isToday(order.createdAt);
+        if (dateFilter === "today") {
+          return isToday(order.createdAt);
+        }
+
         return true;
       })
       .sort((a, b) => Number(b.id || 0) - Number(a.id || 0));
   }, [orders, searchTerm, dateFilter, details]);
 
   const todayOrders = orders.filter((order) => isToday(order.createdAt));
-  const todaySales = todayOrders.reduce(
-    (sum, order) => sum + Number(order.totalSell || 0),
-    0
-  );
-  const todayProfit = todayOrders.reduce(
-    (sum, order) => sum + getProfit(order.id),
-    0
-  );
-  const todayProductQty = todayOrders.reduce(
-    (sum, order) => sum + getOrderItemsCount(order.id),
-    0
-  );
-   
+
+  const todaySales = todayOrders.reduce((sum, order) => {
+    return sum + Number(order.totalSell || 0);
+  }, 0);
+
+  const todayProfit = todayOrders.reduce((sum, order) => {
+    return sum + getProfit(order.id);
+  }, 0);
+
+  const todayProductQty = todayOrders.reduce((sum, order) => {
+    return sum + getOrderItemsQty(order.id);
+  }, 0);
+
   const openDetail = (order) => {
     setSelectedOrder(order);
     setShowDetail(true);
@@ -155,7 +184,6 @@ function WebOrder() {
 
   const handleReset = () => {
     setSearchTerm("");
-    setStatusFilter("");
     setDateFilter("today");
     loadOrders();
   };
@@ -179,20 +207,45 @@ function WebOrder() {
         </div>
 
         <nav className="menu">
-          <NavLink to="/" end className={({ isActive }) => isActive ? "menu-item active" : "menu-item"}>
-            <FaHome /><span>หน้าหลัก</span>
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) =>
+              isActive ? "menu-item active" : "menu-item"
+            }
+          >
+            <FaHome />
+            <span>หน้าหลัก</span>
           </NavLink>
 
-          <NavLink to="/products" className={({ isActive }) => isActive ? "menu-item active" : "menu-item"}>
-            <FaBox /><span>สินค้า</span>
+          <NavLink
+            to="/products"
+            className={({ isActive }) =>
+              isActive ? "menu-item active" : "menu-item"
+            }
+          >
+            <FaBox />
+            <span>สินค้า</span>
           </NavLink>
 
-          <NavLink to="/categories" className={({ isActive }) => isActive ? "menu-item active" : "menu-item"}>
-            <FaThLarge /><span>หมวดหมู่</span>
+          <NavLink
+            to="/categories"
+            className={({ isActive }) =>
+              isActive ? "menu-item active" : "menu-item"
+            }
+          >
+            <FaThLarge />
+            <span>หมวดหมู่</span>
           </NavLink>
 
-          <NavLink to="/orders" className={({ isActive }) => isActive ? "menu-item active" : "menu-item"}>
-            <FaClipboardList /><span>ออเดอร์</span>
+          <NavLink
+            to="/orders"
+            className={({ isActive }) =>
+              isActive ? "menu-item active" : "menu-item"
+            }
+          >
+            <FaClipboardList />
+            <span>ออเดอร์</span>
           </NavLink>
         </nav>
 
@@ -212,7 +265,9 @@ function WebOrder() {
 
         <section className="weborder-summary-grid">
           <div className="weborder-summary-card blue">
-            <div className="summary-icon"><FaShoppingCart /></div>
+            <div className="summary-icon">
+              <FaShoppingCart />
+            </div>
             <div>
               <span>ออเดอร์วันนี้</span>
               <strong>{todayOrders.length}</strong>
@@ -221,7 +276,9 @@ function WebOrder() {
           </div>
 
           <div className="weborder-summary-card green">
-            <div className="summary-icon"><FaMoneyBillWave /></div>
+            <div className="summary-icon">
+              <FaMoneyBillWave />
+            </div>
             <div>
               <span>ยอดขายวันนี้</span>
               <strong>฿{todaySales.toLocaleString()}</strong>
@@ -230,7 +287,9 @@ function WebOrder() {
           </div>
 
           <div className="weborder-summary-card orange">
-            <div className="summary-icon"><FaChartLine /></div>
+            <div className="summary-icon">
+              <FaChartLine />
+            </div>
             <div>
               <span>กำไรวันนี้</span>
               <strong>฿{todayProfit.toLocaleString()}</strong>
@@ -239,19 +298,16 @@ function WebOrder() {
           </div>
 
           <div className="weborder-summary-card purple">
-  <div className="summary-icon">
-    <FaCube />
-  </div>
-
-  <div>
-    <span>สินค้าที่ขายวันนี้</span>
-    <strong>{todayProductQty}</strong>
-    <small>ชิ้น</small>
-  </div>
-</div>
+            <div className="summary-icon">
+              <FaCube />
+            </div>
+            <div>
+              <span>สินค้าที่ขายวันนี้</span>
+              <strong>{todayProductQty}</strong>
+              <small>ชิ้น</small>
+            </div>
+          </div>
         </section>
-
-        
 
         <section className="weborder-table-section">
           <div className="weborder-filter-row">
@@ -265,7 +321,10 @@ function WebOrder() {
               />
             </div>
 
-            <select value={dateFilter} onChange={(e) => setDateFilter(e.target.value)}>
+            <select
+              value={dateFilter}
+              onChange={(e) => setDateFilter(e.target.value)}
+            >
               <option value="today">วันนี้</option>
               <option value="all">ทั้งหมด</option>
             </select>
@@ -289,6 +348,7 @@ function WebOrder() {
                 <th>จำนวนสินค้า</th>
                 <th>ยอดขาย</th>
                 <th>กำไร</th>
+                <th>สถานะ</th>
                 <th>จัดการ</th>
               </tr>
             </thead>
@@ -307,30 +367,38 @@ function WebOrder() {
                   </td>
                 </tr>
               ) : (
-                filteredOrders.map((order) => {
-                   
+                filteredOrders.map((order) => (
+                  <tr key={order.id}>
+                    <td>{getOrderCode(order)}</td>
 
-                  return (
-                    <tr key={order.id}>
-                      <td>{getOrderCode(order)}</td>
-                      <td>{formatDateTime(order.createdAt)}</td>
-                      <td>{getOrderItemsCount(order.id)} รายการ</td>
-                      <td className="money">฿{Number(order.totalSell || 0).toLocaleString()}</td>
-                      <td className="profit">฿{getProfit(order.id).toLocaleString()}</td>
-                       
-                      <td>
-                        <button
-                          className="detail-btn"
-                          type="button"
-                          onClick={() => openDetail(order)}
-                        >
-                          <FaEye />
-                          ดูรายละเอียด
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })
+                    <td>{formatDateTime(order.createdAt)}</td>
+
+                    <td>{getOrderDetailCount(order.id)} รายการ</td>
+
+                    <td>฿{Number(order.totalSell || 0).toLocaleString()}</td>
+
+                    <td>฿{getProfit(order.id).toLocaleString()}</td>
+
+                    <td>
+                      {getDisplayStatus(order) === "SUCCESS" ? (
+                        <span className="order-status success">สำเร็จ</span>
+                      ) : (
+                        <span className="order-status failed">ไม่สำเร็จ</span>
+                      )}
+                    </td>
+
+                    <td>
+                      <button
+                        className="detail-btn"
+                        type="button"
+                        onClick={() => openDetail(order)}
+                      >
+                        <FaEye />
+                        ดูรายละเอียด
+                      </button>
+                    </td>
+                  </tr>
+                ))
               )}
             </tbody>
           </table>
@@ -349,34 +417,58 @@ function WebOrder() {
             </button>
 
             <h2>รายละเอียด {getOrderCode(selectedOrder)}</h2>
+
             <p className="modal-subtitle">
               วันที่ {formatDateTime(selectedOrder.createdAt)}
             </p>
 
-            <div className="order-detail-list">
-              {(details[selectedOrder.id] || []).map((item) => (
-                <div className="order-detail-item" key={item.id}>
-                  <div>
-                    <strong>{item.product?.productName || "-"}</strong>
-                    <p>
-                      {item.quantity} ชิ้น x ฿
-                      {Number(item.sellingPrice || 0).toLocaleString()}
-                    </p>
-                  </div>
-
-                  <span>
-                    ฿{Number(item.totalPrice || 0).toLocaleString()}
-                  </span>
+            {getDisplayStatus(selectedOrder) === "FAILED" ? (
+              <>
+                <div className="failed-order-box">
+                  <h3>ทำรายการไม่สำเร็จ</h3>
+                  <p>
+                    {selectedOrder.failReason ||
+                      "ทำรายการไม่สำเร็จ เนื่องจากสินค้าไม่เพียงพอ"}
+                  </p>
                 </div>
-              ))}
-            </div>
 
-            <div className="modal-total">
-              <span>รวมทั้งหมด</span>
-              <strong>
-                ฿{Number(selectedOrder.totalSell || 0).toLocaleString()}
-              </strong>
-            </div>
+                <div className="modal-total">
+                  <span>รวมทั้งหมด</span>
+                  <strong>฿0</strong>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="order-detail-list">
+                  {(details[selectedOrder.id] || []).length > 0 ? (
+                    (details[selectedOrder.id] || []).map((item) => (
+                      <div className="order-detail-item" key={item.id}>
+                        <div>
+                          <strong>{item.product?.productName || "-"}</strong>
+                          <p>
+                            {item.quantity} ชิ้น x ฿
+                            {Number(item.sellingPrice || 0).toLocaleString()}
+                          </p>
+                        </div>
+
+                        <span>
+                          ฿{Number(item.totalPrice || 0).toLocaleString()}
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="empty-table">ไม่มีรายการสินค้า</p>
+                  )}
+                </div>
+
+                <div className="modal-total">
+                  <span>รวมทั้งหมด</span>
+                  <strong>
+                    ฿{Number(selectedOrder.totalSell || 0).toLocaleString()}
+                  </strong>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}

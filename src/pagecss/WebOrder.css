@@ -345,3 +345,92 @@
   .weborder-summary-card.purple strong {
     color: #7c3aed;
   }
+
+  .order-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 90px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  
+  .order-status.success {
+    color: #15803d;
+    background: #dcfce7;
+  }
+  
+  .order-status.failed {
+    color: #dc2626;
+    background: #fee2e2;
+  }
+  
+  .order-status.pending {
+    color: #92400e;
+    background: #fef3c7;
+  }
+  
+  .failed-order-box {
+    margin-top: 18px;
+    padding: 18px;
+    border-radius: 14px;
+    background: #fee2e2;
+    border: 1px solid #fecaca;
+  }
+  
+  .failed-order-box h3 {
+    margin: 0 0 8px;
+    color: #dc2626;
+    font-size: 20px;
+  }
+  
+  .failed-order-box p {
+    margin: 0;
+    color: #7f1d1d;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  .order-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 90px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  
+  .order-status.success {
+    color: #15803d;
+    background: #dcfce7;
+  }
+  
+  .order-status.failed {
+    color: #dc2626;
+    background: #fee2e2;
+  }
+  
+  .failed-order-box {
+    margin-top: 18px;
+    padding: 18px;
+    border-radius: 14px;
+    background: #fee2e2;
+    border: 1px solid #fecaca;
+  }
+  
+  .failed-order-box h3 {
+    margin: 0 0 8px;
+    color: #dc2626;
+    font-size: 20px;
+  }
+  
+  .failed-order-box p {
+    margin: 0;
+    color: #7f1d1d;
+    font-weight: 700;
+    line-height: 1.5;
+  }

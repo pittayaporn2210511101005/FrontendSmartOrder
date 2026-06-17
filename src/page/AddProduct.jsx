@@ -131,14 +131,6 @@ function AddProduct({ onAdd, categories = [], mode = "add", initialData = null }
       (cat) => getCategorySelectValue(cat) === formData.categoryId
     );
 
-    const categoryName = selectedCategory
-      ? getCategoryNameFromCategory(selectedCategory)
-      : formData.categoryId;
-
-    const categoryIdNumber = Number(formData.categoryId);
-    const safeCategoryId = Number.isNaN(categoryIdNumber)
-      ? formData.categoryId
-      : categoryIdNumber;
 
       const payload = {
         productName,
@@ -149,7 +141,7 @@ function AddProduct({ onAdd, categories = [], mode = "add", initialData = null }
         minStockQty: toNumber(formData.minStockQty || 10),
         imageUrl: formData.imageUrl,
         category: {
-          id: String(formData.categoryId),
+          id: Number(formData.categoryId),
         },
       };
 

@@ -105,9 +105,7 @@ function Products() {
 
   const getCategorySelectValue = (category) => {
     const id = getCategoryIdFromCategory(category);
-    const name = getCategoryNameFromCategory(category);
-
-    return id || name;
+    return id;
   };
 
   const getStatus = (stock, minStockQty = 10) => {
@@ -484,7 +482,6 @@ function Products() {
 
               <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
                 <option value="latest">เรียงตามล่าสุด</option>
-                <option value="name">เรียงตามชื่อสินค้า</option>
                 <option value="stock">สต็อกน้อยไปมาก</option>
               </select>
 

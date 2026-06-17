@@ -16,6 +16,7 @@ function Order() {
   const PRODUCT_API = "http://localhost:8089/api/admin/products";
   const CATEGORY_API = "http://localhost:8089/api/admin/categories";
   const ORDER_API = "http://localhost:8089/api/mobile/orders";
+  const NOTIFICATION_API = "http://localhost:8089/api/mobile/notifications";
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -29,6 +30,14 @@ function Order() {
 
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [expandedNotificationId, setExpandedNotificationId] = useState(null);
+  const [notificationOrders, setNotificationOrders] = useState([]);
+  const [loadingNotificationDetail, setLoadingNotificationDetail] =
+    useState(false);
 
   const normalizeValue = (value) => {
     if (value === null || value === undefined) return "";
@@ -98,16 +107,55 @@ function Order() {
   const getAvailableStock = (product) => {
     const warehouseStock = Number(product.warehouseStock || 0);
     const storeStock = Number(product.storeStock || 0);
-  
+
     if (stockType === "store") {
       return storeStock + warehouseStock;
     }
-  
+
     return warehouseStock;
   };
 
   const getQty = (productId) => {
     return Number(cart[productId] || 0);
+  };
+
+  const getOrderCode = (order) => {
+    return `ORD${String(order.id).padStart(3, "0")}`;
+  };
+
+  const formatMoney = (value) => {
+    return Number(value || 0).toLocaleString();
+  };
+
+  const formatDateThai = (dateValue) => {
+    if (!dateValue) return "-";
+
+    const date = new Date(dateValue);
+
+    return date.toLocaleDateString("th-TH", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+
+  const getDailyReportFromNotification = (noti) => {
+    return noti.dailyReport ?? noti.daily_report ?? null;
+  };
+
+  const getReportDateFromNotification = (noti) => {
+    const report = getDailyReportFromNotification(noti);
+
+    return (
+      report?.reportDate ??
+      report?.report_date ??
+      noti.dateSent?.slice(0, 10) ??
+      null
+    );
+  };
+
+  const isNotificationRead = (noti) => {
+    return Boolean(noti.read ?? noti.isRead);
   };
 
   const cartItems = useMemo(() => {
@@ -137,36 +185,6 @@ function Order() {
     0
   );
 
-  const lowStockCount = products.filter((product) => {
-    const stock = getProductStock(product);
-    const min = Number(product.minStockQty || 10);
-
-    return stock > 0 && stock <= min;
-  }).length;
-
-  const loadData = async () => {
-    try {
-      setLoading(true);
-
-      const [productRes, categoryRes] = await Promise.all([
-        axios.get(PRODUCT_API),
-        axios.get(CATEGORY_API),
-      ]);
-
-      setProducts(Array.isArray(productRes.data) ? productRes.data : []);
-      setCategories(Array.isArray(categoryRes.data) ? categoryRes.data : []);
-    } catch (error) {
-      console.error(error);
-      alert("โหลดข้อมูลไม่สำเร็จ");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadData();
-  }, []);
-
   const filteredProducts = useMemo(() => {
     const keyword = searchTerm.toLowerCase();
 
@@ -193,26 +211,113 @@ function Order() {
       });
   }, [products, selectedCategory, searchTerm, cart]);
 
+  const loadData = async () => {
+    try {
+      setLoading(true);
+
+      const [productRes, categoryRes] = await Promise.all([
+        axios.get(PRODUCT_API),
+        axios.get(CATEGORY_API),
+      ]);
+
+      setProducts(Array.isArray(productRes.data) ? productRes.data : []);
+      setCategories(Array.isArray(categoryRes.data) ? categoryRes.data : []);
+    } catch (error) {
+      console.error(error);
+      alert("โหลดข้อมูลไม่สำเร็จ");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadNotifications = async () => {
+    try {
+      const [allRes, unreadRes] = await Promise.all([
+        axios.get(NOTIFICATION_API),
+        axios.get(`${NOTIFICATION_API}/unread`),
+      ]);
+
+      setNotifications(Array.isArray(allRes.data) ? allRes.data : []);
+      setUnreadCount(Array.isArray(unreadRes.data) ? unreadRes.data.length : 0);
+    } catch (error) {
+      console.error(error);
+      setNotifications([]);
+      setUnreadCount(0);
+    }
+  };
+
+  const openNotificationPanel = async () => {
+    setShowNotifications(true);
+    setExpandedNotificationId(null);
+    setNotificationOrders([]);
+    await loadNotifications();
+  };
+
+  const toggleNotificationDetail = async (noti) => {
+    if (expandedNotificationId === noti.id) {
+      setExpandedNotificationId(null);
+      setNotificationOrders([]);
+      return;
+    }
+
+    const reportDate = getReportDateFromNotification(noti);
+
+    try {
+      setLoadingNotificationDetail(true);
+      setExpandedNotificationId(noti.id);
+
+      if (!isNotificationRead(noti)) {
+        await axios.put(`${NOTIFICATION_API}/${noti.id}/read`);
+        await loadNotifications();
+      }
+
+      if (!reportDate) {
+        setNotificationOrders([]);
+        return;
+      }
+
+      const orderRes = await axios.get(`${ORDER_API}/date?date=${reportDate}`);
+      const orderData = Array.isArray(orderRes.data) ? orderRes.data : [];
+
+      const successOrders = orderData.filter((order) => {
+        const totalSell = Number(order.totalSell || 0);
+        return order.status !== "FAILED" && totalSell > 0;
+      });
+
+      setNotificationOrders(successOrders);
+    } catch (error) {
+      console.error(error);
+      setNotificationOrders([]);
+    } finally {
+      setLoadingNotificationDetail(false);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+    loadNotifications();
+  }, []);
+
   const increaseQty = (product) => {
     const productId = product.id;
     const currentQty = getQty(productId);
-  
+
     const warehouseStock = Number(product.warehouseStock || 0);
     const storeStock = Number(product.storeStock || 0);
     const availableStock = getAvailableStock(product);
-  
+
     if (availableStock <= 0) {
       alert("สินค้าหมดสต๊อก");
       return;
     }
-  
+
     if (currentQty >= availableStock) {
       alert(
         `สินค้าไม่เพียงพอ\nหน้าร้านมี ${storeStock} ชิ้น\nโกดังมี ${warehouseStock} ชิ้น`
       );
       return;
     }
-  
+
     if (
       stockType === "store" &&
       currentQty + 1 > storeStock &&
@@ -224,7 +329,7 @@ function Order() {
         } ชิ้น`
       );
     }
-  
+
     setCart((prev) => ({
       ...prev,
       [productId]: currentQty + 1,
@@ -286,14 +391,24 @@ function Order() {
 
       setCart({});
       setShowCart(false);
+
       await loadData();
+      await loadNotifications();
     } catch (error) {
       console.error(error);
-      alert(
+
+      const message =
         error.response?.data?.message ||
-          error.response?.data ||
-          "บันทึกออเดอร์ไม่สำเร็จ"
-      );
+        error.response?.data ||
+        "ทำรายการไม่สำเร็จ";
+
+      alert(`ทำรายการไม่สำเร็จ\n${message}`);
+
+      setCart({});
+      setShowCart(false);
+
+      await loadData();
+      await loadNotifications();
     } finally {
       setSubmitting(false);
     }
@@ -317,10 +432,15 @@ function Order() {
 
         <h1>ออเดอร์</h1>
 
-        <button className="mobile-header-icon right" type="button">
+        <button
+          className="mobile-header-icon right"
+          type="button"
+          onClick={openNotificationPanel}
+        >
           <FaBell />
-          {lowStockCount > 0 && (
-            <span className="mobile-noti-badge">{lowStockCount}</span>
+
+          {unreadCount > 0 && (
+            <span className="mobile-noti-badge">{unreadCount}</span>
           )}
         </button>
       </header>
@@ -403,7 +523,7 @@ function Order() {
               const productName = getProductName(product);
               const categoryName = getCategoryNameFromProduct(product);
               const stock = getProductStock(product);
-const availableStock = getAvailableStock(product);
+              const availableStock = getAvailableStock(product);
               const qty = getQty(product.id);
               const isSelected = qty > 0;
               const minStock = Number(product.minStockQty || 10);
@@ -445,15 +565,21 @@ const availableStock = getAvailableStock(product);
                     </p>
 
                     <p
-  className={`mobile-stock-text ${
-    stock <= 0 ? "out" : stock <= minStock ? "low" : ""
-  }`}
->
-  {stock <= 0 ? "🔴" : stock <= minStock ? "🟡" : "🟢"}{" "}
-  {stockType === "store"
-    ? `หน้าร้าน ${Number(product.storeStock || 0).toLocaleString()} / โกดัง ${Number(product.warehouseStock || 0).toLocaleString()} ชิ้น`
-    : `โกดัง ${Number(product.warehouseStock || 0).toLocaleString()} ชิ้น`}
-</p>
+                      className={`mobile-stock-text ${
+                        stock <= 0 ? "out" : stock <= minStock ? "low" : ""
+                      }`}
+                    >
+                      {stock <= 0 ? "🔴" : stock <= minStock ? "🟡" : "🟢"}{" "}
+                      {stockType === "store"
+                        ? `หน้าร้าน ${Number(
+                            product.storeStock || 0
+                          ).toLocaleString()} / โกดัง ${Number(
+                            product.warehouseStock || 0
+                          ).toLocaleString()} ชิ้น`
+                        : `โกดัง ${Number(
+                            product.warehouseStock || 0
+                          ).toLocaleString()} ชิ้น`}
+                    </p>
                   </div>
 
                   <div className="mobile-qty-control">
@@ -548,6 +674,103 @@ const availableStock = getAvailableStock(product);
                 {submitting ? "กำลังบันทึก..." : "ยืนยันการสั่งซื้อ"}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showNotifications && (
+        <div className="mobile-noti-modal">
+          <div className="mobile-noti-box">
+            <div className="mobile-noti-header">
+              <h2>แจ้งเตือน</h2>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setShowNotifications(false);
+                  setExpandedNotificationId(null);
+                  setNotificationOrders([]);
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            {notifications.length === 0 ? (
+              <div className="mobile-noti-empty">ไม่มีแจ้งเตือน</div>
+            ) : (
+              <div className="mobile-noti-list">
+                {notifications.map((noti) => {
+                  const report = getDailyReportFromNotification(noti);
+                  const read = isNotificationRead(noti);
+
+                  return (
+                    <div
+                      className={`mobile-noti-card ${
+                        read ? "read" : "unread"
+                      }`}
+                      key={noti.id}
+                    >
+                      <button
+                        type="button"
+                        className="mobile-noti-summary"
+                        onClick={() => toggleNotificationDetail(noti)}
+                      >
+                        <div>
+                          <strong>
+                            สรุปยอดขายประจำวันที่{" "}
+                            {report?.reportDate
+                              ? formatDateThai(report.reportDate)
+                              : formatDateThai(noti.dateSent)}
+                          </strong>
+
+                          <span>ยอดขาย ฿{formatMoney(report?.totalSell)}</span>
+<span>ต้นทุน ฿{formatMoney(report?.totalCost)}</span>
+<span>กำไร ฿{formatMoney(report?.profit)}</span>
+<span>สินค้าขายดี {report?.topSelling || "-"}</span>
+                        </div>
+
+                        <small>
+                          {expandedNotificationId === noti.id
+                            ? "ซ่อน"
+                            : "ดูรายการขาย"}
+                        </small>
+                      </button>
+
+                      {expandedNotificationId === noti.id && (
+                        <div className="mobile-noti-detail">
+                          {loadingNotificationDetail ? (
+                            <div className="mobile-noti-empty">
+                              กำลังโหลดรายละเอียด...
+                            </div>
+                          ) : notificationOrders.length === 0 ? (
+                            <div className="mobile-noti-empty">
+                              ไม่มีออเดอร์สำเร็จในวันนี้
+                            </div>
+                          ) : (
+                            <>
+                              <h3>รายการขายวันนี้</h3>
+
+                              {notificationOrders.map((order) => (
+                                <div
+                                  className="mobile-noti-order-row"
+                                  key={order.id}
+                                >
+                                  <span>{getOrderCode(order)}</span>
+                                  <strong>
+                                    ฿{formatMoney(order.totalSell)}
+                                  </strong>
+                                </div>
+                              ))}
+                            </>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
       )}
