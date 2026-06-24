@@ -16,7 +16,7 @@ import {
 
 import "../pagecss/Products.css";
 import AddProduct from "./AddProduct";
-
+  
 function Products() {
   const navigate = useNavigate();
 
@@ -110,7 +110,7 @@ function Products() {
 
   const getStatus = (stock, minStockQty = 10) => {
     const safeStock = Number(stock || 0);
-    const safeMinStockQty = Number(minStockQty || 10);
+    const safeMinStockQty = Number(minStockQty ?? 10);
 
     if (safeStock === 0) return "หมดสต๊อก";
     if (safeStock <= safeMinStockQty) return "ใกล้หมด";
@@ -225,11 +225,15 @@ function Products() {
       closeProductModal();
     } catch (error) {
       console.error("บันทึกสินค้าไม่สำเร็จ:", error);
-      alert(
-        formMode === "edit"
+    
+      const backendMessage =
+        error.response?.data?.message ||
+        error.response?.data ||
+        (formMode === "edit"
           ? "แก้ไขสินค้าไม่สำเร็จ"
-          : "เพิ่มสินค้าไม่สำเร็จ"
-      );
+          : "เพิ่มสินค้าไม่สำเร็จ");
+    
+      alert(backendMessage);
     }
   };
 

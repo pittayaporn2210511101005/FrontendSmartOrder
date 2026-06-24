@@ -18,14 +18,12 @@
     padding-top: 28px;
   }
   
-  /* โลโก้ */
   .logo {
     width: 190px;
     height: auto;
     margin-bottom: 6px;
   }
   
-  /* ถ้าใช้ข้อความ SmartOrder แยก */
   .logo-text,
   .brand-name {
     margin: 0;
@@ -50,34 +48,28 @@
     color: #263142;
   }
   
-  /* ฟอร์ม */
   .login-form {
-    width: 382px;
-    display: flex;
+    width: 400px;
     flex-direction: column;
-    background: transparent;
-    box-shadow: none;
-    border-radius: 0;
-    padding: 0;
+    display: flex;
   }
   
   .login-form label {
-    font-size: 15px;
+    font-size: 20px;
     font-weight: 700;
     color: #1f2937;
     margin-bottom: 7px;
   }
   
-  /* กล่อง input */
   .input-box {
     width: 100%;
-    height: 46px;
+    height: 50px;
     border: 1.5px solid #b7c0cc;
     border-radius: 6px;
     display: flex;
     align-items: center;
-    padding: 0 13px;
-    margin-bottom: 18px;
+    padding: 0 15px;
+    margin-bottom: 20px;
     background: #ffffff;
   }
   
@@ -90,16 +82,15 @@
     font-size: 19px;
     color: #6b7280;
     margin-right: 16px;
-    flex-shrink: 0;
   }
   
   .input-box input {
-    flex: 1;
+    flex: 10;
     border: none;
     outline: none;
     height: 100%;
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 400;
     color: #111827;
     background: transparent;
   }
@@ -109,7 +100,6 @@
     font-weight: 600;
   }
   
-  /* ปุ่มตา */
   .eye-btn {
     border: none;
     background: transparent;
@@ -118,29 +108,9 @@
     cursor: pointer;
     padding: 0;
     display: flex;
-    align-items: center;
+    justify-content: center;
   }
   
-  /* checkbox */
-  .remember {
-    display: flex !important;
-    align-items: center;
-    gap: 9px;
-    font-size: 15px !important;
-    font-weight: 700;
-    color: #1f2937;
-    margin-top: -5px;
-    margin-bottom: 15px !important;
-  }
-  
-  .remember input {
-    width: 18px;
-    height: 18px;
-    margin: 0;
-    accent-color: #0052ff;
-  }
-  
-  /* ปุ่ม login */
   .login-btn {
     width: 100%;
     height: 54px;
@@ -151,75 +121,9 @@
     font-size: 21px;
     font-weight: 700;
     cursor: pointer;
-  
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-  
-    margin-top: 0;
-  }
-  
-  .login-btn:hover {
-    background: #0046df;
   }
   
   .btn-icon {
     font-size: 24px;
     line-height: 1;
-  }
-  
-  /* ข้อความล่าง */
-  .support {
-    margin: 18px 0 0;
-    text-align: center;
-    color: #1f2937;
-    font-size: 15px;
-    font-weight: 600;
-    line-height: 1.5;
-  }
-  
-  .phone-row {
-    margin-top: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: 18px;
-    font-weight: 700;
-  }
-  
-  .phone-icon {
-    width: 18px;
-    height: 18px;
-    background: #0052ff;
-    color: #ffffff;
-    border-radius: 50%;
-    padding: 3px;
-  }
-  
-  /* มือถือ */
-  @media (max-width: 480px) {
-    .login-page {
-      padding: 28px 20px;
-    }
-  
-    .login-form {
-      width: 100%;
-      max-width: 382px;
-    }
-  
-    .logo {
-      width: 175px;
-    }
-  
-    .logo-text,
-    .brand-name {
-      font-size: 34px;
-    }
-  
-    .login-btn {
-      height: 52px;
-      font-size: 19px;
-    }
   }

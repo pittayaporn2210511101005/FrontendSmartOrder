@@ -7,7 +7,6 @@ import axios from "axios";
 function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -36,7 +35,7 @@ function Login({ onLoginSuccess }) {
       }
     } catch (error) {
       console.error(error);
-      alert("Emailหรือรหัสไม่ถูกต้อง");
+      alert("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
     }
   };
 

@@ -306,11 +306,6 @@ function Order() {
     const storeStock = Number(product.storeStock || 0);
     const availableStock = getAvailableStock(product);
 
-    if (availableStock <= 0) {
-      alert("สินค้าหมดสต๊อก");
-      return;
-    }
-
     if (currentQty >= availableStock) {
       alert(
         `สินค้าไม่เพียงพอ\nหน้าร้านมี ${storeStock} ชิ้น\nโกดังมี ${warehouseStock} ชิ้น`
@@ -706,9 +701,7 @@ function Order() {
 
                   return (
                     <div
-                      className={`mobile-noti-card ${
-                        read ? "read" : "unread"
-                      }`}
+                      className={`mobile-noti-card ${read ? "read" : "unread"}`}
                       key={noti.id}
                     >
                       <button
@@ -725,9 +718,9 @@ function Order() {
                           </strong>
 
                           <span>ยอดขาย ฿{formatMoney(report?.totalSell)}</span>
-<span>ต้นทุน ฿{formatMoney(report?.totalCost)}</span>
-<span>กำไร ฿{formatMoney(report?.profit)}</span>
-<span>สินค้าขายดี {report?.topSelling || "-"}</span>
+                          <span>ต้นทุน ฿{formatMoney(report?.totalCost)}</span>
+                          <span>กำไร ฿{formatMoney(report?.profit)}</span>
+                          <span>สินค้าขายดี {report?.topSelling || "-"}</span>
                         </div>
 
                         <small>

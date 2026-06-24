@@ -12,10 +12,8 @@ import Order from "./mobile/Order";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loginName, setLoginName] = useState("");
 
-  const handleLoginSuccess = (username) => {
-    setLoginName(username);
+  const handleLoginSuccess = () => {
     setIsLoggedIn(true);
   };
 
@@ -23,7 +21,13 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/mobile/login" element={<MobileLogin />} />
-        <Route path="/mobile/order" element={<Order />} />
+        <Route
+          path="/mobile/order"
+          element={
+            localStorage.getItem("mobileUser") ? <Order /> : <MobileLogin />
+          }
+        />
+
 
         {!isLoggedIn ? (
           <Route
@@ -32,7 +36,7 @@ function App() {
           />
         ) : (
           <>
-            <Route path="/" element={<Main username={loginName} />} />
+            <Route path="/" element={<Main/>} />
             <Route path="/products" element={<Products />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/orders" element={<WebOrder />} />

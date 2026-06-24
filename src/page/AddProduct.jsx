@@ -6,6 +6,8 @@ import {
   FaExclamationTriangle,
 } from "react-icons/fa";
 
+import "../pagecss/AddProduct.css";
+
 function AddProduct({ onAdd, categories = [], mode = "add", initialData = null }) {
   const isEditMode = mode === "edit";
   const [submitting, setSubmitting] = useState(false);
@@ -16,25 +18,18 @@ function AddProduct({ onAdd, categories = [], mode = "add", initialData = null }
   };
 
   const getCategoryIdFromCategory = (cat) => {
-    if (typeof cat === "string") return "";
-
-    return normalizeValue(
-      cat.id ?? cat.categoryId ?? cat.category_id ?? cat.categoryID
-    );
+    if (!cat) return "";
+    return normalizeValue(cat.id);
   };
 
   const getCategoryNameFromCategory = (cat) => {
     if (typeof cat === "string") return normalizeValue(cat);
-
-    return normalizeValue(
-      cat.categoryname ?? cat.categoryName ?? cat.category_name ?? cat.name
-    );
+    return normalizeValue(cat.categoryname);
   };
 
   const getCategorySelectValue = (cat) => {
     const categoryId = getCategoryIdFromCategory(cat);
     const categoryName = getCategoryNameFromCategory(cat);
-
     return categoryId || categoryName;
   };
 
@@ -58,6 +53,7 @@ function AddProduct({ onAdd, categories = [], mode = "add", initialData = null }
     );
   };
 
+
   const getEmptyForm = () => ({
     productName: "",
     categoryId: "",
@@ -68,7 +64,7 @@ function AddProduct({ onAdd, categories = [], mode = "add", initialData = null }
     minStockQty: "",
     imageUrl: "",
   });
-
+  
   const [formData, setFormData] = useState(getEmptyForm());
 
   useEffect(() => {
@@ -82,7 +78,7 @@ function AddProduct({ onAdd, categories = [], mode = "add", initialData = null }
         sellPrice: normalizeValue(initialData.sellPrice),
         warehouseStock: normalizeValue(initialData.warehouseStock),
         storeStock: normalizeValue(initialData.storeStock),
-        minStockQty: normalizeValue(initialData.minStockQty || 10),
+        minStockQty: normalizeValue(initialData.minStockQty || 5),
         imageUrl: normalizeValue(initialData.imageUrl),
       });
     } else {
@@ -127,11 +123,6 @@ function AddProduct({ onAdd, categories = [], mode = "add", initialData = null }
       if (!confirmPrice) return;
     }
 
-    const selectedCategory = categories.find(
-      (cat) => getCategorySelectValue(cat) === formData.categoryId
-    );
-
-
       const payload = {
         productName,
         buyPrice: toNumber(formData.buyPrice),
@@ -168,7 +159,6 @@ function AddProduct({ onAdd, categories = [], mode = "add", initialData = null }
     }
   
     const reader = new FileReader();
-  
     reader.onloadend = () => {
       setFormData((prev) => ({
         ...prev,
@@ -189,7 +179,7 @@ function AddProduct({ onAdd, categories = [], mode = "add", initialData = null }
       <div className="product-form-header">
         <div className="product-form-icon">
           {isEditMode ? <FaEdit /> : <FaPlusCircle />}
-        </div>
+        </div> 
 
         <div>
            
@@ -257,7 +247,7 @@ function AddProduct({ onAdd, categories = [], mode = "add", initialData = null }
           value={formData.productName}
           onChange={handleChange}
           placeholder="เช่น น้ำเปล่า"
-          required
+          noValidate
         />
       </div>
 
@@ -268,7 +258,8 @@ function AddProduct({ onAdd, categories = [], mode = "add", initialData = null }
           name="categoryId"
           value={formData.categoryId}
           onChange={handleChange}
-          required
+          noValidate
+          //required
         >
           <option value="">เลือกหมวดหมู่</option>
 
@@ -277,8 +268,8 @@ function AddProduct({ onAdd, categories = [], mode = "add", initialData = null }
             const categoryName = getCategoryNameFromCategory(cat);
 
             return (
-              <option key={categoryValue || categoryName} value={categoryValue}>
-                {categoryName || "-"}
+              <option key={categoryValue} value={categoryValue}>
+                {categoryName}
               </option>
             );
           })}
@@ -293,7 +284,7 @@ function AddProduct({ onAdd, categories = [], mode = "add", initialData = null }
             name="buyPrice"
             type="number"
             min="0"
-            step="0.01"
+            step="1"
             value={formData.buyPrice}
             onChange={handleChange}
             placeholder="0"
@@ -308,7 +299,7 @@ function AddProduct({ onAdd, categories = [], mode = "add", initialData = null }
             name="sellPrice"
             type="number"
             min="0"
-            step="0.01"
+            step="1"
             value={formData.sellPrice}
             onChange={handleChange}
             placeholder="0"
@@ -356,7 +347,7 @@ function AddProduct({ onAdd, categories = [], mode = "add", initialData = null }
           min="0"
           value={formData.minStockQty}
           onChange={handleChange}
-          placeholder="10"
+          placeholder="5"
           required
         />
       </div>
