@@ -32,6 +32,8 @@ function Main() {
   const [orders, setOrders] = useState([]);
   const [details, setDetails] = useState({});
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [reportMode, setReportMode] = useState("year");
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [loading, setLoading] = useState(false);
 
   const monthNames = [
@@ -178,24 +180,50 @@ function Main() {
   ];
 
   const chartData = useMemo(() => {
-    const yearly = Array(12).fill(0);
+    if (reportMode === "year") {
+      const yearly = Array(12).fill(0);
+
+      orders.forEach((order) => {
+        if (!order.createdAt) return;
+
+        const date = new Date(order.createdAt);
+
+        if (date.getFullYear() === selectedYear) {
+          yearly[date.getMonth()] += Number(order.totalSell || 0);
+        }
+      });
+
+      return {
+        labels: monthNames,
+        values: yearly,
+        title: `กราฟยอดขายรายปี ${selectedYear + 543}`,
+      };
+    }
+
+    const daysInMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate();
+    const monthly = Array(daysInMonth).fill(0);
 
     orders.forEach((order) => {
       if (!order.createdAt) return;
 
       const date = new Date(order.createdAt);
 
-      if (date.getFullYear() === selectedYear) {
-        yearly[date.getMonth()] += Number(order.totalSell || 0);
+      if (
+        date.getFullYear() === selectedYear &&
+        date.getMonth() === selectedMonth
+      ) {
+        monthly[date.getDate() - 1] += Number(order.totalSell || 0);
       }
     });
 
     return {
-      labels: monthNames,
-      values: yearly,
-      title: `กราฟยอดขายรายปี ${selectedYear + 543}`,
+      labels: Array.from({ length: daysInMonth }, (_, index) => `${index + 1}`),
+      values: monthly,
+      title: `กราฟยอดขายรายเดือน ${monthNames[selectedMonth]} ${
+        selectedYear + 543
+      }`,
     };
-  }, [orders, selectedYear]);
+  }, [orders, selectedYear, selectedMonth, reportMode]);
 
   const getNiceMax = (values) => {
     const maxValue = Math.max(...values, 0);
@@ -218,6 +246,51 @@ function Main() {
 
     return `${x},${y}`;
   });
+
+  const monthlySummary = useMemo(() => {
+    const values = chartData.values;
+    const totalSales = values.reduce((sum, value) => sum + value, 0);
+    const maxSale = Math.max(...values, 0);
+    const bestIndex = values.findIndex((value) => value === maxSale);
+
+    return {
+      totalSales,
+      maxSale,
+      bestLabel:
+        maxSale <= 0
+          ? "-"
+          : reportMode === "year"
+          ? monthNames[bestIndex] || "-"
+          : bestIndex >= 0
+          ? `วันที่ ${bestIndex + 1}`
+          : "-",
+    };
+  }, [chartData.values, reportMode]);
+
+  const getReportTitle = () => {
+    if (reportMode === "year") {
+      return `รายปี ${selectedYear + 543}`;
+    }
+
+    return `รายเดือน ${monthNames[selectedMonth]} ${selectedYear + 543}`;
+  };
+
+  const getOrdersBySelectedPeriod = () => {
+    return orders.filter((order) => {
+      if (!order.createdAt) return false;
+
+      const date = new Date(order.createdAt);
+
+      if (reportMode === "year") {
+        return date.getFullYear() === selectedYear;
+      }
+
+      return (
+        date.getFullYear() === selectedYear &&
+        date.getMonth() === selectedMonth
+      );
+    });
+  };
 
   const topProducts = useMemo(() => {
     const productMap = {};
@@ -271,14 +344,14 @@ function Main() {
 
   const formatThaiDateShort = (dateValue) => {
     const date = dateValue ? new Date(dateValue) : new Date();
-  
+
     return date.toLocaleDateString("th-TH", {
       day: "numeric",
       month: "numeric",
       year: "numeric",
     });
   };
-  
+
   const getReportRows = () => {
     return todayOrders.map((order) => ({
       วันที่: formatThaiDateShort(order.createdAt),
@@ -289,7 +362,7 @@ function Main() {
       ราคาขายทั้งหมด: Number(order.totalSell || 0),
     }));
   };
-  
+
   const getYearlyReportRows = () => {
     return monthNames.map((month, monthIndex) => {
       const monthOrders = orders.filter((order) => {
@@ -317,6 +390,47 @@ function Main() {
 
       return {
         month,
+        label: month,
+        cost,
+        sales,
+        profit,
+      };
+    });
+  };
+
+  const getMonthlyReportRows = () => {
+    const daysInMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate();
+
+    return Array.from({ length: daysInMonth }, (_, index) => {
+      const day = index + 1;
+
+      const dayOrders = orders.filter((order) => {
+        if (!order.createdAt) return false;
+
+        const date = new Date(order.createdAt);
+
+        return (
+          date.getFullYear() === selectedYear &&
+          date.getMonth() === selectedMonth &&
+          date.getDate() === day
+        );
+      });
+
+      const sales = dayOrders.reduce(
+        (sum, order) => sum + Number(order.totalSell || 0),
+        0
+      );
+
+      const profit = dayOrders.reduce(
+        (sum, order) => sum + getProfitByOrderId(order.id),
+        0
+      );
+
+      const cost = sales - profit;
+
+      return {
+        day,
+        label: `วันที่ ${day}`,
         cost,
         sales,
         profit,
@@ -326,35 +440,32 @@ function Main() {
 
   const handleExportExcel = () => {
     const rows = [];
-  
-    const ordersInYear = orders
-      .filter((order) => {
-        if (!order.createdAt) return false;
-        return new Date(order.createdAt).getFullYear() === selectedYear;
-      })
-      .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-  
-    ordersInYear.forEach((order) => {
+
+    const ordersInPeriod = getOrdersBySelectedPeriod().sort(
+      (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+    );
+
+    ordersInPeriod.forEach((order) => {
       const orderDetails = details[order.id] || [];
       const orderDate = new Date(order.createdAt).toLocaleDateString("th-TH");
       const orderNo = order.orderNumber || `T${order.id}`;
-  
+
       let totalCostOrder = 0;
       let totalSellOrder = 0;
-  
+
       orderDetails.forEach((item, index) => {
         const productName = item.product?.productName || "-";
         const quantity = Number(item.quantity || 0);
         const buyPrice = Number(item.product?.buyPrice || 0);
         const sellPrice = Number(item.sellingPrice || 0);
-  
+
         const totalCost = buyPrice * quantity;
         const totalSell = sellPrice * quantity;
         const profit = totalSell - totalCost;
-  
+
         totalCostOrder += totalCost;
         totalSellOrder += totalSell;
-  
+
         rows.push([
           index === 0 ? orderDate : "",
           index === 0 ? orderNo : "",
@@ -369,7 +480,7 @@ function Main() {
           "",
         ]);
       });
-  
+
       rows.push([
         "",
         "",
@@ -383,12 +494,12 @@ function Main() {
         totalCostOrder,
         totalSellOrder,
       ]);
-  
+
       rows.push([]);
     });
-  
+
     const worksheetData = [
-      ["ช่วงเวลา", `รายปี ${selectedYear + 543}`],
+      ["ช่วงเวลา", getReportTitle()],
       ["วันที่ออกรายงาน", formatCurrentDate()],
       [],
       [
@@ -406,9 +517,9 @@ function Main() {
       ],
       ...rows,
     ];
-  
+
     const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
-  
+
     worksheet["!cols"] = [
       { wch: 14 },
       { wch: 18 },
@@ -422,20 +533,36 @@ function Main() {
       { wch: 22 },
       { wch: 20 },
     ];
-  
+
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "รายงานละเอียดรายปี");
-  
-    XLSX.writeFile(workbook, `รายงานละเอียดรายปี-${selectedYear + 543}.xlsx`);
+
+    if (reportMode === "year") {
+      XLSX.utils.book_append_sheet(workbook, worksheet, "รายงานละเอียดรายปี");
+      XLSX.writeFile(workbook, `รายงานละเอียดรายปี-${selectedYear + 543}.xlsx`);
+    } else {
+      XLSX.utils.book_append_sheet(workbook, worksheet, "รายงานละเอียดรายเดือน");
+      XLSX.writeFile(
+        workbook,
+        `รายงานละเอียดรายเดือน-${selectedMonth + 1}-${selectedYear + 543}.xlsx`
+      );
+    }
   };
 
-  const handleExportPDF = async () => {
-    const reportDate = formatCurrentDate();
-    const rows = getYearlyReportRows();
-
-    const totalCost = rows.reduce((sum, row) => sum + row.cost, 0);
-    const totalSales = rows.reduce((sum, row) => sum + row.sales, 0);
-    const totalProfit = rows.reduce((sum, row) => sum + row.profit, 0);
+  const createPdfReportElement = ({
+    rows,
+    totalCost,
+    totalSales,
+    totalProfit,
+    firstColumnTitle,
+    totalLabel,
+    reportDate,
+    pageNumber,
+    totalPages,
+    showFooter,
+  }) => {
+    const tableFontSize = reportMode === "year" ? 20 : 18;
+    const cellPadding = reportMode === "year" ? 10 : 9;
+    const titleFontSize = reportMode === "year" ? 20 : 18;
 
     const reportElement = document.createElement("div");
 
@@ -444,22 +571,41 @@ function Main() {
     reportElement.style.background = "#ffffff";
     reportElement.style.fontFamily = "Prompt, sans-serif";
     reportElement.style.position = "fixed";
-    reportElement.style.left = "-9999px";
+    reportElement.style.left = "-99999px";
     reportElement.style.top = "0";
+    reportElement.style.zIndex = "-1";
 
     reportElement.innerHTML = `
-      <h2 style="text-align:center; margin-bottom:20px;">
-        รายงานยอดขาย : รายปี ${selectedYear + 543}
+      <h2 style="
+        text-align:center;
+        margin:0 0 18px;
+        font-size:${titleFontSize}px;
+        font-weight:bold;
+      ">
+        รายงานยอดขาย : ${getReportTitle()}
         &nbsp;&nbsp; วันที่ออกรายงาน: ${reportDate}
       </h2>
 
-      <table style="width:100%; border-collapse:collapse; font-size:20px;">
+      ${
+        totalPages > 1
+          ? `<p style="text-align:right; margin:0 0 8px; font-size:14px;">
+              หน้า ${pageNumber} / ${totalPages}
+            </p>`
+          : ""
+      }
+
+      <table style="
+        width:100%;
+        border-collapse:collapse;
+        font-size:${tableFontSize}px;
+        table-layout:fixed;
+      ">
         <thead>
           <tr>
-            <th style="border:1px solid #000; padding:10px;">เดือน</th>
-            <th style="border:1px solid #000; padding:10px;">ต้นทุนทั้งหมด</th>
-            <th style="border:1px solid #000; padding:10px;">ยอดขายทั้งหมด</th>
-            <th style="border:1px solid #000; padding:10px;">กำไรทั้งหมด</th>
+            <th style="border:1px solid #000; padding:${cellPadding}px;">${firstColumnTitle}</th>
+            <th style="border:1px solid #000; padding:${cellPadding}px;">ต้นทุนทั้งหมด</th>
+            <th style="border:1px solid #000; padding:${cellPadding}px;">ยอดขายทั้งหมด</th>
+            <th style="border:1px solid #000; padding:${cellPadding}px;">กำไรทั้งหมด</th>
           </tr>
         </thead>
 
@@ -468,16 +614,16 @@ function Main() {
             .map(
               (row) => `
                 <tr>
-                  <td style="border:1px solid #000; padding:10px; text-align:center;">
-                    ${row.month}
+                  <td style="border:1px solid #000; padding:${cellPadding}px; text-align:center;">
+                    ${row.label}
                   </td>
-                  <td style="border:1px solid #000; padding:10px; text-align:center;">
+                  <td style="border:1px solid #000; padding:${cellPadding}px; text-align:center;">
                     ${row.cost.toLocaleString()}
                   </td>
-                  <td style="border:1px solid #000; padding:10px; text-align:center;">
+                  <td style="border:1px solid #000; padding:${cellPadding}px; text-align:center;">
                     ${row.sales.toLocaleString()}
                   </td>
-                  <td style="border:1px solid #000; padding:10px; text-align:center;">
+                  <td style="border:1px solid #000; padding:${cellPadding}px; text-align:center;">
                     ${row.profit.toLocaleString()}
                   </td>
                 </tr>
@@ -486,51 +632,109 @@ function Main() {
             .join("")}
         </tbody>
 
-        <tfoot>
-          <tr>
-            <th style="border:1px solid #000; padding:10px;">รวมทั้งปี</th>
-            <th style="border:1px solid #000; padding:10px;">
-              ${totalCost.toLocaleString()}
-            </th>
-            <th style="border:1px solid #000; padding:10px;">
-              ${totalSales.toLocaleString()}
-            </th>
-            <th style="border:1px solid #000; padding:10px;">
-              ${totalProfit.toLocaleString()}
-            </th>
-          </tr>
-        </tfoot>
+        ${
+          showFooter
+            ? `
+              <tfoot>
+                <tr>
+                  <th style="border:1px solid #000; padding:${cellPadding}px;">${totalLabel}</th>
+                  <th style="border:1px solid #000; padding:${cellPadding}px;">
+                    ${totalCost.toLocaleString()}
+                  </th>
+                  <th style="border:1px solid #000; padding:${cellPadding}px;">
+                    ${totalSales.toLocaleString()}
+                  </th>
+                  <th style="border:1px solid #000; padding:${cellPadding}px;">
+                    ${totalProfit.toLocaleString()}
+                  </th>
+                </tr>
+              </tfoot>
+            `
+            : ""
+        }
       </table>
     `;
 
-    document.body.appendChild(reportElement);
+    return reportElement;
+  };
 
-    const canvas = await html2canvas(reportElement, {
-      scale: 2,
-      backgroundColor: "#ffffff",
-    });
+  const handleExportPDF = async () => {
+    const reportDate = formatCurrentDate();
+    const rows =
+      reportMode === "year" ? getYearlyReportRows() : getMonthlyReportRows();
 
-    const imgData = canvas.toDataURL("image/png");
+    const totalCost = rows.reduce((sum, row) => sum + row.cost, 0);
+    const totalSales = rows.reduce((sum, row) => sum + row.sales, 0);
+    const totalProfit = rows.reduce((sum, row) => sum + row.profit, 0);
+
+    const firstColumnTitle = reportMode === "year" ? "เดือน" : "วันที่";
+    const totalLabel = reportMode === "year" ? "รวมทั้งปี" : "รวมทั้งเดือน";
+
+    const rowsPerPage = reportMode === "year" ? 12 : 10;
+    const pages = [];
+
+    for (let i = 0; i < rows.length; i += rowsPerPage) {
+      pages.push(rows.slice(i, i + rowsPerPage));
+    }
+
     const doc = new jsPDF("landscape", "mm", "a4");
 
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
+    for (let pageIndex = 0; pageIndex < pages.length; pageIndex++) {
+      const isLastPage = pageIndex === pages.length - 1;
 
-    const imgWidth = pageWidth - 20;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const reportElement = createPdfReportElement({
+        rows: pages[pageIndex],
+        totalCost,
+        totalSales,
+        totalProfit,
+        firstColumnTitle,
+        totalLabel,
+        reportDate,
+        pageNumber: pageIndex + 1,
+        totalPages: pages.length,
+        showFooter: isLastPage,
+      });
 
-    doc.addImage(
-      imgData,
-      "PNG",
-      10,
-      10,
-      imgWidth,
-      Math.min(imgHeight, pageHeight - 20)
-    );
+      document.body.appendChild(reportElement);
 
-    doc.save(`รายงานยอดขายรายปี-${selectedYear + 543}.pdf`);
+      const canvas = await html2canvas(reportElement, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+        useCORS: true,
+      });
 
-    document.body.removeChild(reportElement);
+      const imgData = canvas.toDataURL("image/png");
+
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+
+      const margin = 10;
+      const imgWidth = pageWidth - margin * 2;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      if (pageIndex > 0) {
+        doc.addPage();
+      }
+
+      doc.addImage(
+        imgData,
+        "PNG",
+        margin,
+        margin,
+        imgWidth,
+        Math.min(imgHeight, pageHeight - margin * 2)
+      );
+
+      document.body.removeChild(reportElement);
+    }
+
+    if (reportMode === "year") {
+      doc.save(`รายงานยอดขายรายปี-${selectedYear + 543}.pdf`);
+    } else {
+      doc.save(
+        `รายงานยอดขายรายเดือน-${selectedMonth + 1}-${selectedYear + 543}.pdf`
+      );
+    }
   };
 
   return (
@@ -642,83 +846,187 @@ function Main() {
             <div className="panel-header">
               <h2>{chartData.title}</h2>
 
-              <select
-                className="chart-select"
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(Number(e.target.value))}
-              >
-                {[selectedYear - 2, selectedYear - 1, selectedYear, selectedYear + 1].map(
-                  (year) => (
+              <div className="report-controls">
+                <div className="report-mode-buttons">
+                  <button
+                    type="button"
+                    className={
+                      reportMode === "month"
+                        ? "report-mode-btn active"
+                        : "report-mode-btn"
+                    }
+                    onClick={() => setReportMode("month")}
+                  >
+                    รายเดือน
+                  </button>
+
+                  <button
+                    type="button"
+                    className={
+                      reportMode === "year"
+                        ? "report-mode-btn active"
+                        : "report-mode-btn"
+                    }
+                    onClick={() => setReportMode("year")}
+                  >
+                    รายปี
+                  </button>
+                </div>
+
+                {reportMode === "month" && (
+                  <select
+                    className="chart-select"
+                    value={selectedMonth}
+                    onChange={(e) => setSelectedMonth(Number(e.target.value))}
+                  >
+                    {monthNames.map((month, index) => (
+                      <option key={month} value={index}>
+                        {month}
+                      </option>
+                    ))}
+                  </select>
+                )}
+
+                <select
+                  className="chart-select"
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(Number(e.target.value))}
+                >
+                  {[
+                    selectedYear - 2,
+                    selectedYear - 1,
+                    selectedYear,
+                    selectedYear + 1,
+                  ].map((year) => (
                     <option key={year} value={year}>
                       {year + 543}
                     </option>
-                  )
-                )}
-              </select>
+                  ))}
+                </select>
+              </div>
             </div>
 
-            <div className="chart-area">
-              <div className="y-labels">
-                <span>{maxSales.toLocaleString()}</span>
-                <span>{Math.round(maxSales * 0.75).toLocaleString()}</span>
-                <span>{Math.round(maxSales * 0.5).toLocaleString()}</span>
-                <span>{Math.round(maxSales * 0.25).toLocaleString()}</span>
-                <span>0</span>
-              </div>
+            {reportMode === "year" ? (
+              <div className="chart-area">
+                <div className="y-labels">
+                  <span>{maxSales.toLocaleString()}</span>
+                  <span>{Math.round(maxSales * 0.75).toLocaleString()}</span>
+                  <span>{Math.round(maxSales * 0.5).toLocaleString()}</span>
+                  <span>{Math.round(maxSales * 0.25).toLocaleString()}</span>
+                  <span>0</span>
+                </div>
 
-              <div className="chart">
-                <svg viewBox="0 0 700 300" preserveAspectRatio="none">
-                  <defs>
-                    <linearGradient id="blueArea" x1="0" y1="0" x2="0" y2="1">
-                      <stop
-                        offset="0%"
-                        stopColor="#0b5cff"
-                        stopOpacity="0.35"
-                      />
-                      <stop
-                        offset="100%"
-                        stopColor="#0b5cff"
-                        stopOpacity="0.02"
-                      />
-                    </linearGradient>
-                  </defs>
+                <div className="chart">
+                  <svg viewBox="0 0 700 300" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="blueArea" x1="0" y1="0" x2="0" y2="1">
+                        <stop
+                          offset="0%"
+                          stopColor="#0b5cff"
+                          stopOpacity="0.35"
+                        />
+                        <stop
+                          offset="100%"
+                          stopColor="#0b5cff"
+                          stopOpacity="0.02"
+                        />
+                      </linearGradient>
+                    </defs>
 
-                  <polygon
-                    points={`${chartPoints.join(" ")} 700,300 0,300`}
-                    fill="url(#blueArea)"
-                  />
+                    <polygon
+                      points={`${chartPoints.join(" ")} 700,300 0,300`}
+                      fill="url(#blueArea)"
+                    />
 
-                  <polyline
-                    points={chartPoints.join(" ")}
-                    fill="none"
-                    stroke="#0b5cff"
-                    strokeWidth="4"
-                  />
+                    <polyline
+                      points={chartPoints.join(" ")}
+                      fill="none"
+                      stroke="#0b5cff"
+                      strokeWidth="4"
+                    />
 
-                  {chartData.values.map((sale, index) => {
-                    const total = chartData.values.length - 1 || 1;
-                    const x = (index / total) * 700;
-                    const y = 300 - (sale / maxSales) * 270;
+                    {chartData.values.map((sale, index) => {
+                      const total = chartData.values.length - 1 || 1;
+                      const x = (index / total) * 700;
+                      const y = 300 - (sale / maxSales) * 270;
 
-                    return (
-                      <circle
-                        key={index}
-                        cx={x}
-                        cy={y}
-                        r="6"
-                        fill="#0b5cff"
-                      />
-                    );
-                  })}
-                </svg>
+                      return (
+                        <circle
+                          key={index}
+                          cx={x}
+                          cy={y}
+                          r="6"
+                          fill="#0b5cff"
+                        />
+                      );
+                    })}
+                  </svg>
 
-                <div className="x-labels">
-                  {chartData.labels.map((label) => (
-                    <span key={label}>{label}</span>
-                  ))}
+                  <div className="x-labels">
+                    {chartData.labels.map((label) => (
+                      <span key={label}>{label}</span>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="monthly-report-box">
+                <div className="monthly-summary-grid">
+                  <div className="monthly-summary-card">
+                    <span>ยอดขายรวมเดือนนี้</span>
+                    <strong>
+                      {monthlySummary.totalSales.toLocaleString()} บาท
+                    </strong>
+                  </div>
+
+                  <div className="monthly-summary-card">
+                    <span>ยอดขายสูงสุด</span>
+                    <strong>{monthlySummary.maxSale.toLocaleString()} บาท</strong>
+                  </div>
+
+                  <div className="monthly-summary-card">
+                    <span>วันที่ขายดีที่สุด</span>
+                    <strong>{monthlySummary.bestLabel}</strong>
+                  </div>
+                </div>
+
+                <div className="monthly-chart-scroll">
+                  <div className="monthly-bar-chart">
+                    {chartData.values.map((sale, index) => {
+                      const percent = maxSales > 0 ? (sale / maxSales) * 100 : 0;
+                      const height = sale > 0 ? Math.max(percent, 6) : 2;
+
+                      return (
+                        <div className="monthly-bar-item" key={index}>
+                          <div className="monthly-bar-value">
+                            {sale > 0 ? sale.toLocaleString() : ""}
+                          </div>
+
+                          <div className="monthly-bar-track">
+                            <div
+                              className={
+                                sale > 0
+                                  ? "monthly-bar-fill"
+                                  : "monthly-bar-fill empty"
+                              }
+                              style={{ height: `${height}%` }}
+                            ></div>
+                          </div>
+
+                          <div className="monthly-bar-label">
+                            {chartData.labels[index]}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <p className="monthly-chart-note">
+                  เลื่อนซ้าย-ขวาเพื่อดูยอดขายครบทุกวันของเดือน
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="right-column">
@@ -729,7 +1037,7 @@ function Main() {
                 <FaCalendarAlt />
                 <div>
                   <span>ช่วงเวลา</span>
-                  <strong>รายปี</strong>
+                  <strong>{getReportTitle()}</strong>
                 </div>
               </div>
 
