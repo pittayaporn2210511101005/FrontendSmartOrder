@@ -1,10 +1,14 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
-import "../pagecss/Login.css";
-import logo from "../assets/logo1.png";
 import axios from "axios";
 
+import "../pagecss/Login.css";
+import logo from "../assets/logo1.png";
+
 function Login({ onLoginSuccess }) {
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -17,20 +21,25 @@ function Login({ onLoginSuccess }) {
       return;
     }
 
-    try{
+    try {
       const response = await axios.post(
         "http://localhost:8089/api/admin/login",
         {
-          username,password,
+          username,
+          password,
         }
       );
 
       console.log(response.data);
 
-    if (response.data === "success") {
-      alert("เข้าสู่ระบบสำเร็จ");
-      onLoginSuccess(username);
-      }else {
+      if (response.data === "success") {
+        alert("เข้าสู่ระบบสำเร็จ");
+
+        onLoginSuccess(username);
+
+        // สำคัญ: login สำเร็จแล้วให้ไปหน้าหลัก
+        navigate("/");
+      } else {
         alert(response.data);
       }
     } catch (error) {
@@ -52,8 +61,10 @@ function Login({ onLoginSuccess }) {
 
       <form className="login-form" onSubmit={handleSubmit}>
         <label>ชื่อผู้ใช้</label>
+
         <div className="input-box">
           <FaUser className="icon" />
+
           <input
             type="text"
             placeholder="กรอกชื่อผู้ใช้"
@@ -63,8 +74,10 @@ function Login({ onLoginSuccess }) {
         </div>
 
         <label>รหัสผ่าน</label>
+
         <div className="input-box">
           <FaLock className="icon" />
+
           <input
             type={showPassword ? "text" : "password"}
             placeholder="กรอกรหัสผ่าน"

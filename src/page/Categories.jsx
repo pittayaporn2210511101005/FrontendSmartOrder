@@ -11,10 +11,10 @@ import {
   FaPlus,
   FaEdit,
   FaTrash,
-  FaRedoAlt,
   FaSearch,
   FaSave,
   FaCubes,
+  FaCalendarAlt,
 } from "react-icons/fa";
 
 import "../pagecss/Categories.css";
@@ -40,6 +40,7 @@ function Categories() {
   const loadCategories = async () => {
     try {
       setLoading(true);
+
       const res = await axios.get(API_URL);
       setCategories(Array.isArray(res.data) ? res.data : []);
     } catch (error) {
@@ -90,26 +91,44 @@ function Categories() {
     }));
   };
 
+  const normalizeCategoryName = (name) => {
+    return String(name || "").trim().toLowerCase();
+  };
+
+  const isDuplicateCategoryName = (name) => {
+    const newName = normalizeCategoryName(name);
+
+    return categories.some((category) => {
+      const oldName = normalizeCategoryName(category.categoryname);
+
+      if (mode === "edit" && editingCategory) {
+        return category.id !== editingCategory.id && oldName === newName;
+      }
+
+      return oldName === newName;
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const payload = {
       categoryname: formData.categoryname.trim(),
     };
-  
+
     if (!payload.categoryname) {
       alert("กรุณากรอกชื่อหมวดหมู่สินค้า");
       return;
     }
-  
+
     if (isDuplicateCategoryName(payload.categoryname)) {
       alert(`มีหมวดหมู่ "${payload.categoryname}" อยู่แล้ว`);
       return;
     }
-  
+
     try {
       setSubmitting(true);
-  
+
       if (mode === "add") {
         await axios.post(API_URL, payload);
         alert("เพิ่มหมวดหมู่สำเร็จ");
@@ -117,22 +136,22 @@ function Categories() {
         await axios.put(`${API_URL}/${editingCategory.id}`, payload);
         alert("แก้ไขหมวดหมู่สำเร็จ");
       }
-  
+
       await loadCategories();
       closeModal();
     } catch (error) {
       console.error("บันทึกหมวดหมู่ไม่สำเร็จ:", error);
-  
+
       const message =
         error.response?.data?.message ||
         error.response?.data ||
         "";
-  
+
       if (String(message).includes("ซ้ำ")) {
         alert("มีชื่อหมวดหมู่นี้อยู่แล้ว");
         return;
       }
-  
+
       alert(
         mode === "add"
           ? "เพิ่มหมวดหมู่ไม่สำเร็จ"
@@ -158,10 +177,6 @@ function Categories() {
       console.error("ลบหมวดหมู่ไม่สำเร็จ:", error);
       alert("ลบหมวดหมู่ไม่สำเร็จ อาจมีสินค้าอยู่ในหมวดหมู่นี้");
     }
-  };
-
-  const handleResetFilters = () => {
-    setSearchTerm("");
   };
 
   const handleLogout = () => {
@@ -201,24 +216,6 @@ function Categories() {
     0
   );
 
-  const normalizeCategoryName = (name) => {
-    return String(name || "").trim().toLowerCase();
-  };
-  
-  const isDuplicateCategoryName = (name) => {
-    const newName = normalizeCategoryName(name);
-  
-    return categories.some((category) => {
-      const oldName = normalizeCategoryName(category.categoryname);
-  
-      if (mode === "edit" && editingCategory) {
-        return category.id !== editingCategory.id && oldName === newName;
-      }
-  
-      return oldName === newName;
-    });
-  };
-
   return (
     <div className="cat-page">
       <aside className="cat-sidebar">
@@ -226,6 +223,7 @@ function Categories() {
           <div className="cat-logo-box">
             <FaShoppingCart />
           </div>
+
           <h2>SmartOrder</h2>
           <p>ระบบจัดการร้านค้า</p>
         </div>
@@ -271,6 +269,16 @@ function Categories() {
             <FaClipboardList />
             <span>ออเดอร์</span>
           </NavLink>
+
+          <NavLink
+            to="/mock-sales"
+            className={({ isActive }) =>
+              isActive ? "cat-menu-item active" : "cat-menu-item"
+            }
+          >
+            <FaCalendarAlt />
+            <span>เพิ่มยอดขายย้อนหลัง</span>
+          </NavLink>
         </nav>
 
         <button className="cat-logout-btn" type="button" onClick={handleLogout}>
@@ -283,7 +291,6 @@ function Categories() {
         <header className="cat-header">
           <div>
             <h1>จัดการหมวดหมู่สินค้าในร้าน</h1>
-             
           </div>
 
           <button className="cat-add-btn" type="button" onClick={openAddModal}>
@@ -300,6 +307,7 @@ function Categories() {
 
             <div className="cat-summary-info">
               <span>จำนวนหมวดหมู่</span>
+
               <div>
                 <strong>{categories.length}</strong>
                 <small>หมวดหมู่</small>
@@ -314,6 +322,7 @@ function Categories() {
 
             <div className="cat-summary-info">
               <span>จำนวนสินค้าในหมวดหมู่</span>
+
               <div>
                 <strong>{totalProductsInCategories}</strong>
                 <small>รายการ</small>
@@ -326,6 +335,7 @@ function Categories() {
           <div className="cat-table-toolbar">
             <div className="cat-search-box">
               <FaSearch />
+
               <input
                 type="text"
                 placeholder="ค้นหาหมวดหมู่"
@@ -333,8 +343,6 @@ function Categories() {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-
-             
           </div>
 
           <table className="cat-table">
@@ -367,14 +375,15 @@ function Categories() {
                     <td className="cat-index-cell">{index + 1}</td>
 
                     <td>
-  <span className="cat-category-name">
-    {category.categoryname || "-"}
-  </span>
-</td>
+                      <span className="cat-category-name">
+                        {category.categoryname || "-"}
+                      </span>
+                    </td>
 
                     <td>
                       <span className="cat-count-text">
-                        {Number(category.productCount || 0).toLocaleString()} รายการ
+                        {Number(category.productCount || 0).toLocaleString()}{" "}
+                        รายการ
                       </span>
                     </td>
 
@@ -418,7 +427,11 @@ function Categories() {
       {showModal && (
         <div className="cat-modal-overlay">
           <div className="cat-modal-card">
-            <button className="cat-modal-close" type="button" onClick={closeModal}>
+            <button
+              className="cat-modal-close"
+              type="button"
+              onClick={closeModal}
+            >
               ×
             </button>
 
@@ -437,6 +450,7 @@ function Categories() {
 
               <div className="cat-form-group">
                 <label htmlFor="categoryname">ชื่อหมวดหมู่สินค้า</label>
+
                 <input
                   id="categoryname"
                   type="text"
@@ -463,6 +477,7 @@ function Categories() {
                   disabled={submitting}
                 >
                   {mode === "edit" ? <FaSave /> : <FaPlus />}
+
                   {submitting
                     ? "กำลังบันทึก..."
                     : mode === "edit"

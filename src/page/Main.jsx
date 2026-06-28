@@ -106,7 +106,9 @@ function Main() {
   };
 
   const getTotalStock = (product) => {
-    return Number(product.warehouseStock || 0) + Number(product.storeStock || 0);
+    return (
+      Number(product.warehouseStock || 0) + Number(product.storeStock || 0)
+    );
   };
 
   const getProfitByOrderId = (orderId) => {
@@ -286,8 +288,7 @@ function Main() {
       }
 
       return (
-        date.getFullYear() === selectedYear &&
-        date.getMonth() === selectedMonth
+        date.getFullYear() === selectedYear && date.getMonth() === selectedMonth
       );
     });
   };
@@ -371,8 +372,7 @@ function Main() {
         const date = new Date(order.createdAt);
 
         return (
-          date.getFullYear() === selectedYear &&
-          date.getMonth() === monthIndex
+          date.getFullYear() === selectedYear && date.getMonth() === monthIndex
         );
       });
 
@@ -540,7 +540,11 @@ function Main() {
       XLSX.utils.book_append_sheet(workbook, worksheet, "รายงานละเอียดรายปี");
       XLSX.writeFile(workbook, `รายงานละเอียดรายปี-${selectedYear + 543}.xlsx`);
     } else {
-      XLSX.utils.book_append_sheet(workbook, worksheet, "รายงานละเอียดรายเดือน");
+      XLSX.utils.book_append_sheet(
+        workbook,
+        worksheet,
+        "รายงานละเอียดรายเดือน"
+      );
       XLSX.writeFile(
         workbook,
         `รายงานละเอียดรายเดือน-${selectedMonth + 1}-${selectedYear + 543}.xlsx`
@@ -791,6 +795,16 @@ function Main() {
           </NavLink>
         </nav>
 
+        <NavLink
+          to="/mock-sales"
+          className={({ isActive }) =>
+            isActive ? "cat-menu-item active" : "cat-menu-item"
+          }
+        >
+          <FaCalendarAlt />
+          <span>เพิ่มยอดขายย้อนหลัง</span>
+        </NavLink>
+
         <button className="logout-btn" type="button" onClick={handleLogout}>
           <FaSignOutAlt />
           <span>ออกจากระบบ</span>
@@ -808,7 +822,11 @@ function Main() {
             </p>
           </div>
 
-          <button className="date-box" type="button" onClick={loadDashboardData}>
+          <button
+            className="date-box"
+            type="button"
+            onClick={loadDashboardData}
+          >
             <FaCalendarAlt />
             <div>
               <strong>{formatCurrentDate()}</strong>
@@ -981,7 +999,9 @@ function Main() {
 
                   <div className="monthly-summary-card">
                     <span>ยอดขายสูงสุด</span>
-                    <strong>{monthlySummary.maxSale.toLocaleString()} บาท</strong>
+                    <strong>
+                      {monthlySummary.maxSale.toLocaleString()} บาท
+                    </strong>
                   </div>
 
                   <div className="monthly-summary-card">
@@ -993,7 +1013,8 @@ function Main() {
                 <div className="monthly-chart-scroll">
                   <div className="monthly-bar-chart">
                     {chartData.values.map((sale, index) => {
-                      const percent = maxSales > 0 ? (sale / maxSales) * 100 : 0;
+                      const percent =
+                        maxSales > 0 ? (sale / maxSales) * 100 : 0;
                       const height = sale > 0 ? Math.max(percent, 6) : 2;
 
                       return (

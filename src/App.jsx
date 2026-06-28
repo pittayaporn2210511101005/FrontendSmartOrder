@@ -6,6 +6,7 @@ import Main from "./page/Main";
 import Products from "./page/Products";
 import Categories from "./page/Categories";
 import WebOrder from "./page/WebOrder";
+import MockSales from "./page/MockSales";
 
 import MobileLogin from "./mobile/MobileLogin";
 import Order from "./mobile/Order";
@@ -40,6 +41,7 @@ function App() {
             <Route path="/products" element={<Products />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/orders" element={<WebOrder />} />
+            <Route path="/mock-sales" element={<MockSales />} />
           </>
         )}
       </Routes>

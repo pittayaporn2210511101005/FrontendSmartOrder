@@ -14,6 +14,7 @@ import {
   FaMoneyBillWave,
   FaChartLine,
   FaCube,
+  FaCalendarAlt,
 } from "react-icons/fa";
 import "../pagecss/WebOrder.css";
 
@@ -84,13 +85,11 @@ function WebOrder() {
     });
   };
 
-  // จำนวนรายการ เช่น 0 รายการ, 1 รายการ, 3 รายการ
   const getOrderDetailCount = (orderId) => {
     const list = details[orderId] || [];
     return list.length;
   };
 
-  // จำนวนชิ้นรวม เช่น ขาย 46 ชิ้น
   const getOrderItemsQty = (orderId) => {
     const list = details[orderId] || [];
 
@@ -202,6 +201,7 @@ function WebOrder() {
           <div className="logo-box">
             <FaShoppingCart />
           </div>
+
           <h2>SmartOrder</h2>
           <p>ระบบจัดการร้านค้า</p>
         </div>
@@ -247,6 +247,16 @@ function WebOrder() {
             <FaClipboardList />
             <span>ออเดอร์</span>
           </NavLink>
+
+          <NavLink
+            to="/mock-sales"
+            className={({ isActive }) =>
+              isActive ? "menu-item active" : "menu-item"
+            }
+          >
+            <FaCalendarAlt />
+            <span>เพิ่มยอดขายย้อนหลัง</span>
+          </NavLink>
         </nav>
 
         <button className="logout-btn" type="button" onClick={handleLogout}>
@@ -268,6 +278,7 @@ function WebOrder() {
             <div className="summary-icon">
               <FaShoppingCart />
             </div>
+
             <div>
               <span>ออเดอร์วันนี้</span>
               <strong>{todayOrders.length}</strong>
@@ -279,6 +290,7 @@ function WebOrder() {
             <div className="summary-icon">
               <FaMoneyBillWave />
             </div>
+
             <div>
               <span>ยอดขายวันนี้</span>
               <strong>฿{todaySales.toLocaleString()}</strong>
@@ -290,6 +302,7 @@ function WebOrder() {
             <div className="summary-icon">
               <FaChartLine />
             </div>
+
             <div>
               <span>กำไรวันนี้</span>
               <strong>฿{todayProfit.toLocaleString()}</strong>
@@ -301,6 +314,7 @@ function WebOrder() {
             <div className="summary-icon">
               <FaCube />
             </div>
+
             <div>
               <span>สินค้าที่ขายวันนี้</span>
               <strong>{todayProductQty}</strong>
@@ -313,6 +327,7 @@ function WebOrder() {
           <div className="weborder-filter-row">
             <div className="weborder-search-box">
               <FaSearch />
+
               <input
                 type="text"
                 placeholder="ค้นหาเลขออเดอร์..."
@@ -426,6 +441,7 @@ function WebOrder() {
               <>
                 <div className="failed-order-box">
                   <h3>ทำรายการไม่สำเร็จ</h3>
+
                   <p>
                     {selectedOrder.failReason ||
                       "ทำรายการไม่สำเร็จ เนื่องจากสินค้าไม่เพียงพอ"}
@@ -445,6 +461,7 @@ function WebOrder() {
                       <div className="order-detail-item" key={item.id}>
                         <div>
                           <strong>{item.product?.productName || "-"}</strong>
+
                           <p>
                             {item.quantity} ชิ้น x ฿
                             {Number(item.sellingPrice || 0).toLocaleString()}
@@ -463,6 +480,7 @@ function WebOrder() {
 
                 <div className="modal-total">
                   <span>รวมทั้งหมด</span>
+
                   <strong>
                     ฿{Number(selectedOrder.totalSell || 0).toLocaleString()}
                   </strong>

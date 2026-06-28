@@ -12,11 +12,12 @@ import {
   FaEdit,
   FaTrash,
   FaRedoAlt,
+  FaCalendarAlt,
 } from "react-icons/fa";
 
 import "../pagecss/Products.css";
 import AddProduct from "./AddProduct";
-  
+
 function Products() {
   const navigate = useNavigate();
 
@@ -67,7 +68,7 @@ function Products() {
     if (typeof product.category === "string") {
       return normalizeValue(product.category);
     }
-  
+
     return normalizeValue(
       product.category?.categoryname ??
         product.category?.Categoryname ??
@@ -104,8 +105,7 @@ function Products() {
   };
 
   const getCategorySelectValue = (category) => {
-    const id = getCategoryIdFromCategory(category);
-    return id;
+    return getCategoryIdFromCategory(category);
   };
 
   const getStatus = (stock, minStockQty = 10) => {
@@ -225,14 +225,12 @@ function Products() {
       closeProductModal();
     } catch (error) {
       console.error("บันทึกสินค้าไม่สำเร็จ:", error);
-    
+
       const backendMessage =
         error.response?.data?.message ||
         error.response?.data ||
-        (formMode === "edit"
-          ? "แก้ไขสินค้าไม่สำเร็จ"
-          : "เพิ่มสินค้าไม่สำเร็จ");
-    
+        (formMode === "edit" ? "แก้ไขสินค้าไม่สำเร็จ" : "เพิ่มสินค้าไม่สำเร็จ");
+
       alert(backendMessage);
     }
   };
@@ -345,6 +343,7 @@ function Products() {
           <div className="logo-box">
             <FaShoppingCart />
           </div>
+
           <h2>SmartOrder</h2>
           <p>ระบบจัดการร้านค้า</p>
         </div>
@@ -390,6 +389,16 @@ function Products() {
             <FaClipboardList />
             <span>ออเดอร์</span>
           </NavLink>
+
+          <NavLink
+            to="/mock-sales"
+            className={({ isActive }) =>
+              isActive ? "menu-item active" : "menu-item"
+            }
+          >
+            <FaCalendarAlt />
+            <span>เพิ่มยอดขายย้อนหลัง</span>
+          </NavLink>
         </nav>
 
         <button className="logout-btn" type="button" onClick={handleLogout}>
@@ -421,7 +430,10 @@ function Products() {
           <div className="summary-card ready">
             <span>สินค้าพร้อมขาย</span>
             <strong>
-              {products.filter((product) => product.status === "พร้อมขาย").length}
+              {
+                products.filter((product) => product.status === "พร้อมขาย")
+                  .length
+              }
             </strong>
             <small>รายการ</small>
           </div>
@@ -429,7 +441,10 @@ function Products() {
           <div className="summary-card low">
             <span>สินค้าใกล้หมด</span>
             <strong>
-              {products.filter((product) => product.status === "ใกล้หมด").length}
+              {
+                products.filter((product) => product.status === "ใกล้หมด")
+                  .length
+              }
             </strong>
             <small>รายการ</small>
           </div>
@@ -437,7 +452,10 @@ function Products() {
           <div className="summary-card empty">
             <span>สินค้าหมดสต๊อก</span>
             <strong>
-              {products.filter((product) => product.status === "หมดสต๊อก").length}
+              {
+                products.filter((product) => product.status === "หมดสต๊อก")
+                  .length
+              }
             </strong>
             <small>รายการ</small>
           </div>
@@ -570,7 +588,9 @@ function Products() {
                       </div>
                     </td>
 
-                    <td>{Number(product.warehouseStock || 0).toLocaleString()}</td>
+                    <td>
+                      {Number(product.warehouseStock || 0).toLocaleString()}
+                    </td>
 
                     <td>{Number(product.storeStock || 0).toLocaleString()}</td>
 
@@ -580,7 +600,9 @@ function Products() {
 
                     <td>
                       <span
-                        className={`status-badge ${getStatusClass(product.status)}`}
+                        className={`status-badge ${getStatusClass(
+                          product.status
+                        )}`}
                       >
                         {product.status}
                       </span>
