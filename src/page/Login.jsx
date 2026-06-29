@@ -27,8 +27,6 @@ function Login({ onLoginSuccess }) {
         password,
       });
 
-      console.log(response.data);
-
       const token = response.data.token;
       const loginUsername = response.data.username;
       const role = response.data.role;
@@ -58,7 +56,8 @@ function Login({ onLoginSuccess }) {
 
       const message =
         error.response?.data?.message ||
-        error.response?.data ||
+        error.response?.data?.error ||
+        error.message ||
         "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";
 
       alert(message);
