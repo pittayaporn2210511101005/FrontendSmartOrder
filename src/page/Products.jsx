@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
-import axios from "axios";
+import api from "../api/api";
 import {
   FaHome,
   FaBox,
@@ -20,8 +20,8 @@ import AddProduct from "./AddProduct";
 
 function Products({ onLogout }) {
 
-  const PRODUCT_API = "http://localhost:8089/api/admin/products";
-  const CATEGORY_API = "http://localhost:8089/api/admin/categories";
+  const PRODUCT_API = "/api/admin/products";
+  const CATEGORY_API = "api/admin/categories";
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -134,7 +134,7 @@ function Products({ onLogout }) {
     try {
       setLoading(true);
 
-      const res = await axios.get(PRODUCT_API);
+      const res = await api.get(PRODUCT_API);
       const data = Array.isArray(res.data) ? res.data : [];
 
       const mappedProducts = data.map((product) => {
@@ -167,7 +167,7 @@ function Products({ onLogout }) {
 
   const loadCategories = async () => {
     try {
-      const res = await axios.get(CATEGORY_API);
+      const res = await api.get(CATEGORY_API);
       const data = Array.isArray(res.data) ? res.data : [];
       setCategories(data);
     } catch (error) {
@@ -212,10 +212,10 @@ function Products({ onLogout }) {
           return;
         }
 
-        await axios.put(`${PRODUCT_API}/${editingProduct.id}`, payload);
+        await api.put(`${PRODUCT_API}/${editingProduct.id}`, payload);
         alert("แก้ไขสินค้าสำเร็จ");
       } else {
-        await axios.post(PRODUCT_API, payload);
+        await api.post(PRODUCT_API, payload);
         alert("เพิ่มสินค้าสำเร็จ");
       }
 
@@ -244,7 +244,7 @@ function Products({ onLogout }) {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`${PRODUCT_API}/${id}`);
+      await api.delete(`${PRODUCT_API}/${id}`);
       await loadProducts();
       await loadCategories();
       alert("ลบสินค้าสำเร็จ");

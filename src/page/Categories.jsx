@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
-import axios from "axios";
-import {
+import api from "../api/api";import {
   FaHome,
   FaBox,
   FaFolder,
@@ -19,7 +18,7 @@ import {
 
 import "../pagecss/Categories.css";
 
-const API_URL = "http://localhost:8089/api/admin/categories";
+const API_URL = "/api/admin/categories";
 
 function Categories({onLogout}) {
   const [categories, setCategories] = useState([]);
@@ -39,7 +38,7 @@ function Categories({onLogout}) {
     try {
       setLoading(true);
 
-      const res = await axios.get(API_URL);
+      const res = await api.get(API_URL);
       setCategories(Array.isArray(res.data) ? res.data : []);
     } catch (error) {
       console.error("โหลดหมวดหมู่ไม่สำเร็จ:", error);
@@ -128,10 +127,10 @@ function Categories({onLogout}) {
       setSubmitting(true);
 
       if (mode === "add") {
-        await axios.post(API_URL, payload);
+        await api.post(API_URL, payload);
         alert("เพิ่มหมวดหมู่สำเร็จ");
       } else {
-        await axios.put(`${API_URL}/${editingCategory.id}`, payload);
+        await api.put(`${API_URL}/${editingCategory.id}`, payload);
         alert("แก้ไขหมวดหมู่สำเร็จ");
       }
 
@@ -168,7 +167,7 @@ function Categories({onLogout}) {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`${API_URL}/${category.id}`);
+      await api.delete(`${API_URL}/${category.id}`);
       alert("ลบหมวดหมู่สำเร็จ");
       await loadCategories();
     } catch (error) {

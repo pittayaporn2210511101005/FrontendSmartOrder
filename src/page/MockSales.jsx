@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
-import axios from "axios";
-import {
+import api from "../api/api";import {
   FaHome,
   FaBox,
   FaFolder,
@@ -18,8 +17,8 @@ import {
 
 import "../pagecss/MockSale.css";
 
-const PRODUCT_API = "http://localhost:8089/api/admin/products";
-const MOCK_ORDER_API = "http://localhost:8089/api/admin/mock-orders";
+const PRODUCT_API = "/api/admin/products";
+const MOCK_ORDER_API = "/api/admin/mock-orders";
 
 function MockSales({onLogout}) {
 
@@ -48,7 +47,7 @@ function MockSales({onLogout}) {
     try {
       setLoadingProducts(true);
 
-      const res = await axios.get(PRODUCT_API);
+      const res = await api.get(PRODUCT_API);
       setProducts(Array.isArray(res.data) ? res.data : []);
     } catch (error) {
       console.error("โหลดสินค้าไม่สำเร็จ:", error);
@@ -258,7 +257,7 @@ function MockSales({onLogout}) {
     try {
       setSubmitting(true);
 
-      await axios.post(MOCK_ORDER_API, payload);
+      await api.post(MOCK_ORDER_API, payload);
 
       alert("เพิ่มยอดขายย้อนหลังสำเร็จ");
       resetForm();

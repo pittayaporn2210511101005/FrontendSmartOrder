@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { NavLink } from "react-router-dom";import axios from "axios";
+import { NavLink } from "react-router-dom";
+import api from "../api/api";
 import {
   FaHome,
   FaBox,
@@ -19,7 +20,7 @@ import "../pagecss/WebOrder.css";
 
 function WebOrder({onLogout}) {
 
-  const ORDER_API = "http://localhost:8089/api/mobile/orders";
+  const ORDER_API = "/api/mobile/orders";
 
   const [orders, setOrders] = useState([]);
   const [details, setDetails] = useState({});
@@ -33,7 +34,7 @@ function WebOrder({onLogout}) {
     try {
       setLoading(true);
 
-      const res = await axios.get(ORDER_API);
+      const res = await api.get(ORDER_API);
       const data = Array.isArray(res.data) ? res.data : [];
       setOrders(data);
 
@@ -43,7 +44,7 @@ function WebOrder({onLogout}) {
         const orderId = order.id;
 
         try {
-          const detailRes = await axios.get(`${ORDER_API}/${orderId}/details`);
+          const detailRes = await api.get(`${ORDER_API}/${orderId}/details`);
           detailMap[orderId] = Array.isArray(detailRes.data)
             ? detailRes.data
             : [];

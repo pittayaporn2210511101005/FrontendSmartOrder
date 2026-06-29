@@ -1,9 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
-import axios from "axios";
+import api from "../api/api";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 import html2canvas from "html2canvas";
 import {
   FaHome,
@@ -24,8 +23,8 @@ import "../pagecss/Main.css";
 
 function Main({ onLogout }) {
 
-  const PRODUCT_API = "http://localhost:8089/api/admin/products";
-  const ORDER_API = "http://localhost:8089/api/mobile/orders";
+  const PRODUCT_API = "/api/admin/products";
+  const ORDER_API = "/api/mobile/orders";
 
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -55,8 +54,8 @@ function Main({ onLogout }) {
       setLoading(true);
 
       const [productRes, orderRes] = await Promise.all([
-        axios.get(PRODUCT_API),
-        axios.get(ORDER_API),
+        api.get(PRODUCT_API),
+        api.get(ORDER_API),
       ]);
 
       const productData = Array.isArray(productRes.data) ? productRes.data : [];
@@ -69,7 +68,7 @@ function Main({ onLogout }) {
 
       for (const order of orderData) {
         try {
-          const detailRes = await axios.get(`${ORDER_API}/${order.id}/details`);
+          const detailRes = await api.get(`${ORDER_API}/${order.id}/details`);
           detailMap[order.id] = Array.isArray(detailRes.data)
             ? detailRes.data
             : [];

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import axios from "axios";
+import api from "../api/api";
 import {
   FaSearch,
   FaPlus,
@@ -13,10 +13,10 @@ import {
 import "../mobilecss/Order.css";
 
 function Order() {
-  const PRODUCT_API = "http://localhost:8089/api/admin/products";
-  const CATEGORY_API = "http://localhost:8089/api/admin/categories";
-  const ORDER_API = "http://localhost:8089/api/mobile/orders";
-  const NOTIFICATION_API = "http://localhost:8089/api/mobile/notifications";
+  const PRODUCT_API = "/api/admin/products";
+  const CATEGORY_API = "/api/admin/categories";
+  const ORDER_API = "/api/mobile/orders";
+  const NOTIFICATION_API = "/api/mobile/notifications";
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -29,15 +29,15 @@ function Order() {
   const [showCart, setShowCart] = useState(false);
 
   const [loading, setLoading] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+const [submitting, setSubmitting] = useState(false);
 
-  const [notifications, setNotifications] = useState([]);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [expandedNotificationId, setExpandedNotificationId] = useState(null);
-  const [notificationOrders, setNotificationOrders] = useState([]);
-  const [loadingNotificationDetail, setLoadingNotificationDetail] =
-    useState(false);
+const [notifications, setNotifications] = useState([]);
+const [unreadCount, setUnreadCount] = useState(0);
+const [showNotifications, setShowNotifications] = useState(false);
+const [expandedNotificationId, setExpandedNotificationId] = useState(null);
+const [notificationOrders, setNotificationOrders] = useState([]);
+const [loadingNotificationDetail, setLoadingNotificationDetail] =
+  useState(false);
 
   const normalizeValue = (value) => {
     if (value === null || value === undefined) return "";
@@ -216,8 +216,8 @@ function Order() {
       setLoading(true);
 
       const [productRes, categoryRes] = await Promise.all([
-        axios.get(PRODUCT_API),
-        axios.get(CATEGORY_API),
+        api.get(PRODUCT_API),
+        api.get(CATEGORY_API),
       ]);
 
       setProducts(Array.isArray(productRes.data) ? productRes.data : []);
@@ -233,8 +233,8 @@ function Order() {
   const loadNotifications = async () => {
     try {
       const [allRes, unreadRes] = await Promise.all([
-        axios.get(NOTIFICATION_API),
-        axios.get(`${NOTIFICATION_API}/unread`),
+        api.get(NOTIFICATION_API),
+        api.get(`${NOTIFICATION_API}/unread`),
       ]);
 
       setNotifications(Array.isArray(allRes.data) ? allRes.data : []);
@@ -267,7 +267,7 @@ function Order() {
       setExpandedNotificationId(noti.id);
 
       if (!isNotificationRead(noti)) {
-        await axios.put(`${NOTIFICATION_API}/${noti.id}/read`);
+        await api.put(`${NOTIFICATION_API}/${noti.id}/read`);
         await loadNotifications();
       }
 
@@ -276,7 +276,7 @@ function Order() {
         return;
       }
 
-      const orderRes = await axios.get(`${ORDER_API}/date?date=${reportDate}`);
+      const orderRes = await api.get(`${ORDER_API}/date?date=${reportDate}`);
       const orderData = Array.isArray(orderRes.data) ? orderRes.data : [];
 
       const successOrders = orderData.filter((order) => {
@@ -420,7 +420,7 @@ function Order() {
     try {
       setSubmitting(true);
 
-      const orderRes = await axios.post(ORDER_API, {
+      const orderRes = await api.post(ORDER_API, {
         totalSell: 0,
       });
 
@@ -432,7 +432,7 @@ function Order() {
       }
 
       for (const item of cartItems) {
-        await axios.post(`${ORDER_API}/${orderId}/details`, {
+        await api.post(`${ORDER_API}/${orderId}/details`, {
           productId: String(item.id),
           quantity: item.qty,
           stockType: stockType,
@@ -467,7 +467,11 @@ function Order() {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    localStorage.removeItem("role");
     localStorage.removeItem("mobileUser");
+
     window.location.href = "/mobile/login";
   };
 
@@ -635,34 +639,34 @@ function Order() {
                   </div>
 
                   <div className="mobile-qty-control">
-  <button
-    type="button"
-    onClick={() => decreaseQty(product)}
-    disabled={qty === 0}
-  >
-    <FaMinus />
-  </button>
+                    <button
+                      type="button"
+                      onClick={() => decreaseQty(product)}
+                      disabled={qty === 0}
+                    >
+                      <FaMinus />
+                    </button>
 
-  <input
-    className="mobile-qty-input"
-    type="number"
-    min="0"
-    max={availableStock}
-    inputMode="numeric"
-    value={qty === 0 ? "" : qty}
-    placeholder="0"
-    onChange={(e) => updateQty(product, e.target.value)}
-    disabled={availableStock <= 0}
-  />
+                    <input
+                      className="mobile-qty-input"
+                      type="number"
+                      min="0"
+                      max={availableStock}
+                      inputMode="numeric"
+                      value={qty === 0 ? "" : qty}
+                      placeholder="0"
+                      onChange={(e) => updateQty(product, e.target.value)}
+                      disabled={availableStock <= 0}
+                    />
 
-  <button
-    type="button"
-    onClick={() => increaseQty(product)}
-    disabled={availableStock <= 0}
-  >
-    <FaPlus />
-  </button>
-</div>
+                    <button
+                      type="button"
+                      onClick={() => increaseQty(product)}
+                      disabled={availableStock <= 0}
+                    >
+                      <FaPlus />
+                    </button>
+                  </div>
                 </div>
               );
             })}

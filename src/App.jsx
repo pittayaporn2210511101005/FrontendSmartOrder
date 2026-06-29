@@ -12,7 +12,10 @@ import MobileLogin from "./mobile/MobileLogin";
 import Order from "./mobile/Order";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    Boolean(localStorage.getItem("token")) &&
+      localStorage.getItem("role") === "ADMIN"
+  );
 
   const handleLoginSuccess = () => {
     setIsLoggedIn(true);
@@ -20,30 +23,28 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    localStorage.removeItem("role");
     localStorage.removeItem("user");
     sessionStorage.clear();
-  
+
     setIsLoggedIn(false);
-  
-    setTimeout(() => {
-      alert("ออกจากระบบสำเร็จ");
-    }, 100);
   };
+
+  const isMobileLoggedIn =
+    Boolean(localStorage.getItem("token")) &&
+    localStorage.getItem("role") === "MOBILE";
 
   return (
     <BrowserRouter>
       <Routes>
-        {/* Mobile */}
         <Route path="/mobile/login" element={<MobileLogin />} />
 
         <Route
           path="/mobile/order"
-          element={
-            localStorage.getItem("mobileUser") ? <Order /> : <MobileLogin />
-          }
+          element={isMobileLoggedIn ? <Order /> : <Navigate to="/mobile/login" replace />}
         />
 
-        {/* Web Login */}
         <Route
           path="/login"
           element={
@@ -55,7 +56,6 @@ function App() {
           }
         />
 
-        {/* Web Admin */}
         {!isLoggedIn ? (
           <Route path="*" element={<Navigate to="/login" replace />} />
         ) : (
@@ -65,7 +65,6 @@ function App() {
             <Route path="/categories" element={<Categories onLogout={handleLogout} />} />
             <Route path="/orders" element={<WebOrder onLogout={handleLogout} />} />
             <Route path="/mock-sales" element={<MockSales onLogout={handleLogout} />} />
-
             <Route path="*" element={<Navigate to="/" replace />} />
           </>
         )}
