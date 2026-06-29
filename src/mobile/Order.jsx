@@ -351,6 +351,63 @@ function Order() {
     });
   };
 
+  const updateQty = (product, value) => {
+    const productId = product.id;
+
+    const warehouseStock = Number(product.warehouseStock || 0);
+    const storeStock = Number(product.storeStock || 0);
+    const availableStock = getAvailableStock(product);
+    const currentQty = getQty(productId);
+
+    const rawValue = String(value).replace(/[^\d]/g, "");
+
+    if (rawValue === "") {
+      setCart((prev) => {
+        const nextCart = { ...prev };
+        delete nextCart[productId];
+        return nextCart;
+      });
+      return;
+    }
+
+    let nextQty = Number(rawValue);
+
+    if (nextQty <= 0) {
+      setCart((prev) => {
+        const nextCart = { ...prev };
+        delete nextCart[productId];
+        return nextCart;
+      });
+      return;
+    }
+
+    if (nextQty > availableStock) {
+      alert(
+        `สินค้าไม่เพียงพอ\nหน้าร้านมี ${storeStock} ชิ้น\nโกดังมี ${warehouseStock} ชิ้น\nใส่ได้สูงสุด ${availableStock} ชิ้น`
+      );
+
+      nextQty = availableStock;
+    }
+
+    if (
+      stockType === "store" &&
+      currentQty <= storeStock &&
+      nextQty > storeStock &&
+      warehouseStock > 0
+    ) {
+      alert(
+        `หน้าร้านมี ${storeStock} ชิ้น\nระบบจะดึงจากโกดังเพิ่ม ${
+          nextQty - storeStock
+        } ชิ้น`
+      );
+    }
+
+    setCart((prev) => ({
+      ...prev,
+      [productId]: nextQty,
+    }));
+  };
+
   const confirmOrder = async () => {
     if (cartItems.length === 0) {
       alert("ยังไม่มีสินค้าในตะกร้า");
@@ -578,24 +635,34 @@ function Order() {
                   </div>
 
                   <div className="mobile-qty-control">
-                    <button
-                      type="button"
-                      onClick={() => decreaseQty(product)}
-                      disabled={qty === 0}
-                    >
-                      <FaMinus />
-                    </button>
+  <button
+    type="button"
+    onClick={() => decreaseQty(product)}
+    disabled={qty === 0}
+  >
+    <FaMinus />
+  </button>
 
-                    <span>{qty}</span>
+  <input
+    className="mobile-qty-input"
+    type="number"
+    min="0"
+    max={availableStock}
+    inputMode="numeric"
+    value={qty === 0 ? "" : qty}
+    placeholder="0"
+    onChange={(e) => updateQty(product, e.target.value)}
+    disabled={availableStock <= 0}
+  />
 
-                    <button
-                      type="button"
-                      onClick={() => increaseQty(product)}
-                      disabled={availableStock <= 0}
-                    >
-                      <FaPlus />
-                    </button>
-                  </div>
+  <button
+    type="button"
+    onClick={() => increaseQty(product)}
+    disabled={availableStock <= 0}
+  >
+    <FaPlus />
+  </button>
+</div>
                 </div>
               );
             })}

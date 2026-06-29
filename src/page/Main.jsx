@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import axios from "axios";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
@@ -22,8 +22,7 @@ import {
 
 import "../pagecss/Main.css";
 
-function Main() {
-  const navigate = useNavigate();
+function Main({ onLogout }) {
 
   const PRODUCT_API = "http://localhost:8089/api/admin/products";
   const ORDER_API = "http://localhost:8089/api/mobile/orders";
@@ -337,10 +336,11 @@ function Main() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    sessionStorage.clear();
-    navigate("/login");
+    const confirmLogout = window.confirm("ต้องการออกจากระบบใช่ไหม");
+    if (!confirmLogout) {
+      return;
+    }
+    onLogout();
   };
 
   const formatThaiDateShort = (dateValue) => {

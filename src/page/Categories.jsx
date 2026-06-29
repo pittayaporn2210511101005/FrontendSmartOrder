@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import axios from "axios";
 import {
   FaHome,
@@ -21,9 +21,7 @@ import "../pagecss/Categories.css";
 
 const API_URL = "http://localhost:8089/api/admin/categories";
 
-function Categories() {
-  const navigate = useNavigate();
-
+function Categories({onLogout}) {
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     categoryname: "",
@@ -180,10 +178,13 @@ function Categories() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    sessionStorage.clear();
-    navigate("/login");
+    const confirmLogout = window.confirm("ต้องการออกจากระบบใช่ไหม");
+  
+    if (!confirmLogout) {
+      return;
+    }
+  
+    onLogout();
   };
 
   const formatDate = (value) => {

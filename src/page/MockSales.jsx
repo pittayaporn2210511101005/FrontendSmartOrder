@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import axios from "axios";
 import {
   FaHome,
@@ -21,8 +21,7 @@ import "../pagecss/MockSale.css";
 const PRODUCT_API = "http://localhost:8089/api/admin/products";
 const MOCK_ORDER_API = "http://localhost:8089/api/admin/mock-orders";
 
-function MockSales() {
-  const navigate = useNavigate();
+function MockSales({onLogout}) {
 
   const [products, setProducts] = useState([]);
 
@@ -64,17 +63,11 @@ function MockSales() {
   }, []);
 
   const handleLogout = () => {
-    const confirmLogout = window.confirm("คุณต้องการออกจากระบบใช่ไหม?");
-  
+    const confirmLogout = window.confirm("ต้องการออกจากระบบใช่ไหม");
     if (!confirmLogout) {
       return;
     }
-  
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    sessionStorage.clear();
-  
-    navigate("/login");
+    onLogout();
   };
 
   const handleChange = (e) => {

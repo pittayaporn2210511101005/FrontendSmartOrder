@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import axios from "axios";
 import {
   FaHome,
@@ -18,8 +18,7 @@ import {
 import "../pagecss/Products.css";
 import AddProduct from "./AddProduct";
 
-function Products() {
-  const navigate = useNavigate();
+function Products({ onLogout }) {
 
   const PRODUCT_API = "http://localhost:8089/api/admin/products";
   const CATEGORY_API = "http://localhost:8089/api/admin/categories";
@@ -263,10 +262,11 @@ function Products() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    sessionStorage.clear();
-    navigate("/login");
+    const confirmLogout = window.confirm("ต้องการออกจากระบบใช่ไหม");
+    if (!confirmLogout) {
+      return;
+    }
+    onLogout();
   };
 
   const filteredProducts = useMemo(() => {

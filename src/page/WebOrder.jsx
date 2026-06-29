@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { NavLink } from "react-router-dom";import axios from "axios";
 import {
   FaHome,
   FaBox,
@@ -18,8 +17,7 @@ import {
 } from "react-icons/fa";
 import "../pagecss/WebOrder.css";
 
-function WebOrder() {
-  const navigate = useNavigate();
+function WebOrder({onLogout}) {
 
   const ORDER_API = "http://localhost:8089/api/mobile/orders";
 
@@ -188,10 +186,11 @@ function WebOrder() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    sessionStorage.clear();
-    navigate("/login");
+    const confirmLogout = window.confirm("ต้องการออกจากระบบใช่ไหม");
+    if (!confirmLogout) {
+      return;
+    }
+    onLogout();
   };
 
   return (

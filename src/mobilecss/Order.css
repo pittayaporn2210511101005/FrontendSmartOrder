@@ -339,7 +339,7 @@
     border: 1px solid #d8e2f0;
     border-radius: 16px;
     display: grid;
-    grid-template-columns: 34px 1fr 34px;
+    grid-template-columns: 34px 44px 34px;
     align-items: center;
     overflow: hidden;
     background: #ffffff;
@@ -707,4 +707,28 @@
     color: #0052ff;
     font-size: 16px;
     font-weight: 900;
+  }
+
+  .mobile-qty-input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-left: 1px solid #d8e2f0;
+    border-right: 1px solid #d8e2f0;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 900;
+    outline: none;
+    background: #ffffff;
+    color: #07164a;
+  }
+  
+  .mobile-qty-input:focus {
+    background: #eaf1ff;
+  }
+  
+  .mobile-qty-input:disabled {
+    background: #f3f4f6;
+    color: #9ca3af;
+    cursor: not-allowed;
   }
