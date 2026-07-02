@@ -22,45 +22,29 @@ function Login({ onLoginSuccess }) {
     }
 
     try {
-      const response = await api.post("/api/auth/login", {
-        username,
-        password,
-      });
+      const response = await api.post(
+        "/api/admin/login",
+        {
+          username,
+          password,
+        }
+      );
 
-      const token = response.data.token;
-      const loginUsername = response.data.username;
-      const role = response.data.role;
+      console.log(response.data);
 
-      if (!token) {
-        alert("เข้าสู่ระบบไม่สำเร็จ ไม่พบ token");
-        return;
+      if (response.data === "success") {
+        alert("เข้าสู่ระบบสำเร็จ");
+
+        onLoginSuccess(username);
+
+        // สำคัญ: login สำเร็จแล้วให้ไปหน้าหลัก
+        navigate("/");
+      } else {
+        alert(response.data);
       }
-
-      if (role !== "ADMIN") {
-        alert("บัญชีนี้ไม่มีสิทธิ์เข้าใช้งานหลังบ้าน");
-        localStorage.clear();
-        return;
-      }
-
-      localStorage.setItem("token", token);
-      localStorage.setItem("username", loginUsername);
-      localStorage.setItem("role", role);
-
-      alert("เข้าสู่ระบบสำเร็จ");
-
-      onLoginSuccess();
-
-      navigate("/");
     } catch (error) {
       console.error(error);
-
-      const message =
-        error.response?.data?.message ||
-        error.response?.data?.error ||
-        error.message ||
-        "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";
-
-      alert(message);
+      alert("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
     }
   };
 

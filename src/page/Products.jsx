@@ -21,7 +21,7 @@ import AddProduct from "./AddProduct";
 function Products({ onLogout }) {
 
   const PRODUCT_API = "/api/admin/products";
-  const CATEGORY_API = "api/admin/categories";
+  const CATEGORY_API = "/api/admin/categories";
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
