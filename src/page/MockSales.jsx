@@ -18,8 +18,8 @@ import {
 
 import "../pagecss/MockSale.css";
 
-const PRODUCT_API = "/api/admin/products";
-const MOCK_ORDER_API = "/api/admin/mock-orders";
+const PRODUCT_API = " /admin/products";
+const MOCK_ORDER_API = " /admin/mock-orders";
 
 function MockSales({onLogout}) {
 

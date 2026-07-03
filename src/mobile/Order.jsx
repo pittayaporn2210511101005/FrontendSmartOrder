@@ -14,10 +14,10 @@ import "../mobilecss/Order.css";
 import { AiFillApi } from "react-icons/ai";
 
 function Order() {
-  const PRODUCT_API = "/api/admin/products";
-  const CATEGORY_API = "/api/admin/categories";
-  const ORDER_API = "/api/mobile/orders";
-  const NOTIFICATION_API = "/api/mobile/notifications";
+  const PRODUCT_API = " /admin/products";
+  const CATEGORY_API = " /admin/categories";
+  const ORDER_API = " /mobile/orders";
+  const NOTIFICATION_API = " /mobile/notifications";
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);

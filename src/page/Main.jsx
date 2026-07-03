@@ -23,8 +23,8 @@ import "../pagecss/Main.css";
 
 function Main({ onLogout }) {
 
-  const PRODUCT_API = "/api/admin/products";
-  const ORDER_API = "/api/mobile/orders";
+  const PRODUCT_API = "/admin/products";
+  const ORDER_API = "/mobile/orders";
 
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);

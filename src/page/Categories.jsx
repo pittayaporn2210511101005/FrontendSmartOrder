@@ -19,7 +19,7 @@ import {
 
 import "../pagecss/Categories.css";
 
-const API_URL = "/api/admin/categories";
+const API_URL = "/admin/categories";
 
 function Categories({onLogout}) {
   const [categories, setCategories] = useState([]);
