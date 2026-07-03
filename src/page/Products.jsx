@@ -20,8 +20,8 @@ import AddProduct from "./AddProduct";
 
 function Products({ onLogout }) {
 
-  const PRODUCT_API = " /admin/products";
-  const CATEGORY_API = " /admin/categories";
+  const PRODUCT_API = "/admin/products";
+  const CATEGORY_API = "/admin/categories";
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);

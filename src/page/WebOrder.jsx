@@ -20,7 +20,7 @@ import "../pagecss/WebOrder.css";
 
 function WebOrder({onLogout}) {
 
-  const ORDER_API = " /mobile/orders";
+  const ORDER_API = "/mobile/orders";
 
   const [orders, setOrders] = useState([]);
   const [details, setDetails] = useState({});
