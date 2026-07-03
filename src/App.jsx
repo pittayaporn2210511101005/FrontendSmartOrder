@@ -42,7 +42,9 @@ function App() {
 
         <Route
           path="/mobile/order"
-          element={isMobileLoggedIn ? <Order /> : <Navigate to="/mobile/login" replace />}
+          element={
+            localStorage.getItem("mobileUser") ? <Order /> : <MobileLogin />
+          }
         />
 
         <Route
@@ -61,10 +63,22 @@ function App() {
         ) : (
           <>
             <Route path="/" element={<Main onLogout={handleLogout} />} />
-            <Route path="/products" element={<Products onLogout={handleLogout} />} />
-            <Route path="/categories" element={<Categories onLogout={handleLogout} />} />
-            <Route path="/orders" element={<WebOrder onLogout={handleLogout} />} />
-            <Route path="/mock-sales" element={<MockSales onLogout={handleLogout} />} />
+            <Route
+              path="/products"
+              element={<Products onLogout={handleLogout} />}
+            />
+            <Route
+              path="/categories"
+              element={<Categories onLogout={handleLogout} />}
+            />
+            <Route
+              path="/orders"
+              element={<WebOrder onLogout={handleLogout} />}
+            />
+            <Route
+              path="/mock-sales"
+              element={<MockSales onLogout={handleLogout} />}
+            />
             <Route path="*" element={<Navigate to="/" replace />} />
           </>
         )}

@@ -16,26 +16,33 @@ function MobileLogin() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (!username || !password) {
+    if (!username.trim() || !password.trim()) {
       alert("กรุณากรอกข้อมูล");
       return;
     }
 
     try {
       const res = await api.post("/admin/login", {
-        username,
-        password,
+        username: username.trim(),
+        password: password.trim(),
       });
 
-      if (res.data === "success") {
-        localStorage.setItem("mobileUser", username);
+      console.log("MOBILE LOGIN RESPONSE:", res.data);
 
-        navigate("/mobile/order");
+      const result =
+        typeof res.data === "string"
+          ? res.data.trim().toLowerCase()
+          : String(res.data?.message || "").trim().toLowerCase();
+
+      if (result === "success") {
+        localStorage.setItem("mobileUser", username.trim());
+
+        navigate("/mobile/order", { replace: true });
       } else {
-        alert(res.data);
+        alert(res.data || "เข้าสู่ระบบไม่สำเร็จ");
       }
     } catch (err) {
-      console.error(err);
+      console.error("MOBILE LOGIN ERROR:", err);
       alert("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
     }
   };
@@ -43,18 +50,18 @@ function MobileLogin() {
   return (
     <div className="mobile-login-page">
       <div className="mobile-login-container">
-      <img
-  src={logo}
-  alt="SmartOrder Logo"
-  className="mobile-admin-logo"
-/>
+        <img
+          src={logo}
+          alt="SmartOrder Logo"
+          className="mobile-admin-logo"
+        />
 
-<h1 className="mobile-brand">
-  <span className="blue">Smart</span>
-  <span className="orange">Order</span>
-</h1>
+        <h1 className="mobile-brand">
+          <span className="blue">Smart</span>
+          <span className="orange">Order</span>
+        </h1>
 
-<p className="mobile-subtitle">ระบบจัดการร้านค้า</p>
+        <p className="mobile-subtitle">ระบบจัดการร้านค้า</p>
 
         <form onSubmit={handleLogin}>
           <label>ชื่อผู้ใช้</label>
@@ -65,9 +72,7 @@ function MobileLogin() {
               type="text"
               placeholder="กรอกชื่อผู้ใช้"
               value={username}
-              onChange={(e) =>
-                setUsername(e.target.value)
-              }
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
 
@@ -77,44 +82,27 @@ function MobileLogin() {
             <FaLock />
 
             <input
-              type={
-                showPassword
-                  ? "text"
-                  : "password"
-              }
+              type={showPassword ? "text" : "password"}
               placeholder="กรอกรหัสผ่าน"
               value={password}
-              onChange={(e) =>
-                setPassword(e.target.value)
-              }
+              onChange={(e) => setPassword(e.target.value)}
             />
 
             <button
               type="button"
               className="eye-btn-mobile"
-              onClick={() =>
-                setShowPassword(!showPassword)
-              }
+              onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? (
-                <FaEyeSlash />
-              ) : (
-                <FaEye />
-              )}
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
 
-          <button
-            type="submit"
-            className="mobile-login-btn"
-          >
+          <button type="submit" className="mobile-login-btn">
             เข้าสู่ระบบ
           </button>
         </form>
 
-        <div className="mobile-support">
-           
-        </div>
+        <div className="mobile-support"></div>
       </div>
     </div>
   );
