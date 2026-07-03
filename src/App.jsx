@@ -13,15 +13,17 @@ import Order from "./mobile/Order";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(
-    Boolean(localStorage.getItem("token")) &&
-      localStorage.getItem("role") === "ADMIN"
+    Boolean(localStorage.getItem("adminUser"))
   );
 
-  const handleLoginSuccess = () => {
+  const handleLoginSuccess = (username) => {
+    localStorage.setItem("adminUser", username || "admin");
     setIsLoggedIn(true);
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("adminUser");
+    localStorage.removeItem("mobileUser");
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     localStorage.removeItem("role");
@@ -31,22 +33,35 @@ function App() {
     setIsLoggedIn(false);
   };
 
-  const isMobileLoggedIn =
-    Boolean(localStorage.getItem("token")) &&
-    localStorage.getItem("role") === "MOBILE";
+  const isMobileLoggedIn = Boolean(localStorage.getItem("mobileUser"));
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/mobile/login" element={<MobileLogin />} />
+        {/* Mobile */}
+        <Route
+          path="/mobile/login"
+          element={
+            isMobileLoggedIn ? (
+              <Navigate to="/mobile/order" replace />
+            ) : (
+              <MobileLogin />
+            )
+          }
+        />
 
         <Route
           path="/mobile/order"
           element={
-            localStorage.getItem("mobileUser") ? <Order /> : <MobileLogin />
+            isMobileLoggedIn ? (
+              <Order />
+            ) : (
+              <Navigate to="/mobile/login" replace />
+            )
           }
         />
 
+        {/* Admin Login */}
         <Route
           path="/login"
           element={
@@ -58,6 +73,7 @@ function App() {
           }
         />
 
+        {/* Admin Pages */}
         {!isLoggedIn ? (
           <Route path="*" element={<Navigate to="/login" replace />} />
         ) : (
