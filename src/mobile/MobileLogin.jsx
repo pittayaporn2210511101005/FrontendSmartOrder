@@ -32,12 +32,14 @@ function MobileLogin() {
       const result =
         typeof res.data === "string"
           ? res.data.trim().toLowerCase()
-          : String(res.data?.message || "").trim().toLowerCase();
+          : String(res.data?.message || "")
+              .trim()
+              .toLowerCase();
 
       if (result === "success") {
         localStorage.setItem("mobileUser", username.trim());
 
-        navigate("/mobile/order", { replace: true });
+        window.location.replace("/mobile/order");
       } else {
         alert(res.data || "เข้าสู่ระบบไม่สำเร็จ");
       }
@@ -50,11 +52,7 @@ function MobileLogin() {
   return (
     <div className="mobile-login-page">
       <div className="mobile-login-container">
-        <img
-          src={logo}
-          alt="SmartOrder Logo"
-          className="mobile-admin-logo"
-        />
+        <img src={logo} alt="SmartOrder Logo" className="mobile-admin-logo" />
 
         <h1 className="mobile-brand">
           <span className="blue">Smart</span>
