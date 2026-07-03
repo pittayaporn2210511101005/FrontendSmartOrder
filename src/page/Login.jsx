@@ -22,13 +22,10 @@ function Login({ onLoginSuccess }) {
     }
 
     try {
-      const response = await api.post(
-        "/api/admin/login",
-        {
-          username,
-          password,
-        }
-      );
+      const response = await api.post("/admin/login", {
+        username,
+        password,
+      });
 
       console.log(response.data);
 

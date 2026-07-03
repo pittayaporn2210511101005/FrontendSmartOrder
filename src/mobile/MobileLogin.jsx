@@ -22,13 +22,10 @@ function MobileLogin() {
     }
 
     try {
-      const res = await api.post(
-        "/api/admin/login",
-        {
-          username,
-          password,
-        }
-      );
+      const res = await api.post("/admin/login", {
+        username,
+        password,
+      });
 
       if (res.data === "success") {
         localStorage.setItem("mobileUser", username);
