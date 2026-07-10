@@ -45,62 +45,27 @@ function Products({ onLogout }) {
   const normalizeText = (value) => normalizeValue(value).toLowerCase();
 
   const getProductId = (product) => {
-    return product.id ?? product.productId ?? product.product_id;
+    return product.id;
   };
 
   const getProductName = (product) => {
-    return normalizeValue(
-      product.productName ?? product.product_name ?? product.name
-    );
+    return normalizeValue(product.productName);
   };
 
   const getCategoryIdFromProduct = (product) => {
-    return normalizeValue(
-      product.category?.id ??
-        product.categoryId ??
-        product.category_id ??
-        product.categoryID
-    );
+    return normalizeValue(product.category?.id);
   };
 
   const getCategoryNameFromProduct = (product) => {
-    if (typeof product.category === "string") {
-      return normalizeValue(product.category);
-    }
-
-    return normalizeValue(
-      product.category?.categoryname ??
-        product.category?.Categoryname ??
-        product.category?.categoryName ??
-        product.category?.category_name ??
-        product.category?.name ??
-        product.categoryname ??
-        product.Categoryname ??
-        product.categoryName ??
-        product.category_name
-    );
+    return normalizeValue(product.category?.categoryname);
   };
 
   const getCategoryIdFromCategory = (category) => {
-    if (typeof category === "string") return "";
-
-    return normalizeValue(
-      category.id ??
-        category.categoryId ??
-        category.category_id ??
-        category.categoryID
-    );
+    return normalizeValue(category?.id);
   };
 
   const getCategoryNameFromCategory = (category) => {
-    if (typeof category === "string") return normalizeValue(category);
-
-    return normalizeValue(
-      category.categoryname ??
-        category.categoryName ??
-        category.category_name ??
-        category.name
-    );
+    return normalizeValue(category?.categoryname);
   };
 
   const getCategorySelectValue = (category) => {
@@ -271,7 +236,8 @@ function Products({ onLogout }) {
 
   const filteredProducts = useMemo(() => {
     const selectedCategoryData = categories.find(
-      (category) => getCategorySelectValue(category) === selectedCategory
+      (category) => getCategorySelectValue(category) ===
+      selectedCategory
     );
 
     const selectedCategoryId = selectedCategoryData
