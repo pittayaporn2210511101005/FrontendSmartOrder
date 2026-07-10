@@ -280,17 +280,9 @@ function Products({ onLogout }) {
         return product.status === selectedStatus;
       })
       .sort((a, b) => {
-        if (sortBy === "name") {
-          return String(a.productName || "").localeCompare(
-            String(b.productName || ""),
-            "th"
-          );
-        }
-
         if (sortBy === "stock") {
           return Number(a.stock || 0) - Number(b.stock || 0);
         }
-
         return Number(b.id || 0) - Number(a.id || 0);
       });
   }, [
