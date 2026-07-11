@@ -18,41 +18,20 @@ function AddProduct({ onAdd, categories = [], mode = "add", initialData = null }
   };
 
   const getCategoryIdFromCategory = (cat) => {
-    if (!cat) return "";
-    return normalizeValue(cat.id);
+    return normalizeValue(cat?.id);
   };
-
+  
   const getCategoryNameFromCategory = (cat) => {
-    if (typeof cat === "string") return normalizeValue(cat);
-    return normalizeValue(cat.categoryname);
+    return normalizeValue(cat?.categoryname);
   };
 
   const getCategorySelectValue = (cat) => {
-    const categoryId = getCategoryIdFromCategory(cat);
-    const categoryName = getCategoryNameFromCategory(cat);
-    return categoryId || categoryName;
+    return getCategoryIdFromCategory(cat);
   };
 
   const getInitialCategoryValue = (data) => {
-    if (!data) return "";
-
-    return normalizeValue(
-      data._categoryId ??
-        data.category?.id ??
-        data.category?.categoryId ??
-        data.category?.category_id ??
-        data.categoryId ??
-        data.category_id ??
-        data.categoryID ??
-        data._categoryName ??
-        data.category?.categoryname ??
-        data.category?.categoryName ??
-        data.category?.name ??
-        data.categoryName ??
-        data.categoryname
-    );
+    return normalizeValue(data?._categoryId ?? data?.category?.id);
   };
-
 
   const getEmptyForm = () => ({
     productName: "",
@@ -70,15 +49,13 @@ function AddProduct({ onAdd, categories = [], mode = "add", initialData = null }
   useEffect(() => {
     if (isEditMode && initialData) {
       setFormData({
-        productName: normalizeValue(
-          initialData.productName ?? initialData.product_name ?? initialData.name
-        ),
+        productName: normalizeValue(initialData.productName),
         categoryId: getInitialCategoryValue(initialData),
         buyPrice: normalizeValue(initialData.buyPrice),
         sellPrice: normalizeValue(initialData.sellPrice),
         warehouseStock: normalizeValue(initialData.warehouseStock),
         storeStock: normalizeValue(initialData.storeStock),
-        minStockQty: normalizeValue(initialData.minStockQty || 5),
+        minStockQty: normalizeValue(initialData.minStockQty ?? 5),
         imageUrl: normalizeValue(initialData.imageUrl),
       });
     } else {
@@ -123,18 +100,21 @@ function AddProduct({ onAdd, categories = [], mode = "add", initialData = null }
       if (!confirmPrice) return;
     }
 
-      const payload = {
-        productName,
-        buyPrice: toNumber(formData.buyPrice),
-        sellPrice: toNumber(formData.sellPrice),
-        warehouseStock: toNumber(formData.warehouseStock),
-        storeStock: toNumber(formData.storeStock),
-        minStockQty: toNumber(formData.minStockQty || 10),
-        imageUrl: formData.imageUrl,
-        category: {
-          id: Number(formData.categoryId),
-        },
-      };
+    const payload = {
+      productName,
+      buyPrice: toNumber(formData.buyPrice),
+      sellPrice: toNumber(formData.sellPrice),
+      warehouseStock: toNumber(formData.warehouseStock),
+      storeStock: toNumber(formData.storeStock),
+      minStockQty:
+        formData.minStockQty === ""
+          ? 5
+          : toNumber(formData.minStockQty),
+      imageUrl: formData.imageUrl,
+      category: {
+        id: Number(formData.categoryId),
+      },
+    };
 
     try {
       setSubmitting(true);

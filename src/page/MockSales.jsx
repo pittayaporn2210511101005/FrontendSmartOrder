@@ -351,9 +351,7 @@ function MockSales({onLogout}) {
         <header className="mock-header">
           <div>
             <h1>เพิ่มยอดขายย้อนหลัง</h1>
-            <p>
-              ใช้สำหรับเพิ่มข้อมูล mock ย้อนหลังผ่านหน้าเว็บ โดยไม่ต้องคีย์ DB โดยตรง
-            </p>
+            
           </div>
         </header>
 
