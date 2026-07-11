@@ -258,7 +258,6 @@ function Products({ onLogout }) {
       })
       .filter((product) => {
         if (!selectedCategory) return true;
-
         const productCategoryId = normalizeValue(product._categoryId);
         const productCategoryName = normalizeValue(product._categoryName);
 
@@ -271,7 +270,7 @@ function Products({ onLogout }) {
           selectedCategoryName &&
           productCategoryName &&
           normalizeText(productCategoryName) ===
-            normalizeText(selectedCategoryName);
+          normalizeText(selectedCategoryName);
 
         return matchById || matchByName;
       })
@@ -283,7 +282,7 @@ function Products({ onLogout }) {
         if (sortBy === "stock") {
           return Number(a.stock || 0) - Number(b.stock || 0);
         }
-        return Number(b.id || 0) - Number(a.id || 0);
+        return Number(b.id || 0) - Number(a.id || 0); 
       });
   }, [
     products,
