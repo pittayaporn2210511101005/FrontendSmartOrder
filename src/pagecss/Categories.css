@@ -567,4 +567,267 @@ body {
     flex-direction: column;
     align-items: stretch;
   }
+
+  /* ==================================
+   Categories สำหรับ Notebook
+   901px - 1366px
+================================== */
+@media screen and (max-width: 1366px) and (min-width: 901px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .cat-page {
+    width: 100%;
+    max-width: 100vw;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== Sidebar ===== */
+
+  .cat-sidebar {
+    width: 230px;
+    padding: 12px 9px;
+  }
+
+  .cat-sidebar-logo {
+    margin-bottom: 16px;
+  }
+
+  .cat-logo-box {
+    width: 60px;
+    height: 60px;
+    font-size: 34px;
+  }
+
+  .cat-sidebar-logo h2 {
+    font-size: 26px;
+  }
+
+  .cat-sidebar-logo p {
+    font-size: 15px;
+  }
+
+  .cat-menu {
+    gap: 6px;
+  }
+
+  .cat-menu-item {
+    height: 42px;
+    gap: 12px;
+    padding: 0 13px;
+    font-size: 16px;
+  }
+
+  .cat-menu-item svg {
+    font-size: 21px;
+    flex-shrink: 0;
+  }
+
+  .cat-logout-btn {
+    height: 42px;
+    font-size: 16px;
+  }
+
+  /* ===== Content ===== */
+
+  .cat-content {
+    width: calc(100vw - 230px);
+    max-width: calc(100vw - 230px);
+    margin-left: 230px;
+    padding: 12px 14px;
+    overflow-x: hidden;
+  }
+
+  /* ===== Header ===== */
+
+  .cat-header {
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .cat-header h1 {
+    font-size: 27px;
+  }
+
+  .cat-header p {
+    margin-top: 4px;
+    font-size: 15px;
+  }
+
+  .cat-add-btn {
+    height: 42px;
+    min-width: 128px;
+    padding: 0 12px;
+    font-size: 14px;
+  }
+
+  /* ===== Summary ===== */
+
+  .cat-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .cat-summary-card {
+    min-height: 86px;
+    padding: 12px;
+    gap: 11px;
+  }
+
+  .cat-summary-icon {
+    width: 46px;
+    height: 46px;
+    font-size: 22px;
+  }
+
+  .cat-summary-info {
+    gap: 2px;
+  }
+
+  .cat-summary-info span {
+    font-size: 14px;
+  }
+
+  .cat-summary-info strong {
+    font-size: 27px;
+  }
+
+  .cat-summary-info small {
+    font-size: 13px;
+  }
+
+  /* ===== Table Card ===== */
+
+  .cat-table-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 12px;
+    overflow-x: hidden;
+  }
+
+  .cat-table-toolbar {
+    margin-bottom: 14px;
+  }
+
+  .cat-search-box {
+    width: 320px;
+    max-width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+
+  .cat-search-box input {
+    font-size: 13px;
+  }
+
+  /* ===== Table ===== */
+
+  .cat-table {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    table-layout: fixed;
+  }
+
+  .cat-table th {
+    padding: 11px 8px;
+    font-size: 13px;
+    line-height: 1.35;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+
+  .cat-table td {
+    padding: 13px 8px;
+    font-size: 13px;
+    line-height: 1.35;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+
+  /* ลำดับ */
+  .cat-table th:nth-child(1),
+  .cat-table td:nth-child(1) {
+    width: 10%;
+  }
+
+  /* ชื่อหมวดหมู่ */
+  .cat-table th:nth-child(2),
+  .cat-table td:nth-child(2) {
+    width: 34%;
+  }
+
+  /* จำนวนสินค้า */
+  .cat-table th:nth-child(3),
+  .cat-table td:nth-child(3) {
+    width: 17%;
+  }
+
+  /* วันที่สร้าง */
+  .cat-table th:nth-child(4),
+  .cat-table td:nth-child(4) {
+    width: 23%;
+  }
+
+  /* จัดการ */
+  .cat-table th:nth-child(5),
+  .cat-table td:nth-child(5) {
+    width: 16%;
+  }
+
+  .cat-category-name {
+    font-size: 14px;
+    line-height: 1.35;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+
+  .cat-count-text,
+  .cat-date-cell,
+  .cat-index-cell {
+    font-size: 13px;
+  }
+
+  .cat-action-row {
+    gap: 5px;
+    flex-wrap: nowrap;
+  }
+
+  .cat-action-row button {
+    width: 29px;
+    min-width: 29px;
+    height: 29px;
+    padding: 0;
+    flex-shrink: 0;
+  }
+
+  .cat-table-footer {
+    margin-top: 10px;
+    font-size: 12px;
+  }
+
+  /* ===== Modal ===== */
+
+  .cat-modal-card {
+    max-width: 440px;
+    padding: 24px;
+  }
+
+  .cat-form-icon {
+    width: 46px;
+    height: 46px;
+    font-size: 20px;
+  }
+
+  .cat-form-header h2 {
+    font-size: 21px;
+  }
+}
 }
