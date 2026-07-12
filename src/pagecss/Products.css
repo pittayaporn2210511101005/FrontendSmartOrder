@@ -1,400 +1,5 @@
-/* Products Page CSS */
-.dashboard {
-  min-height: 100vh;
-  display: flex;
-  background: #f4f7fb;
-}
-
-.content {
-  flex: 1;
-  margin-left: 300px;
-  padding: 20px 24px;
-  min-height: 100vh;
-  background-color: #f4f7fb;
-}
-
-.sidebar {
-  width: 300px;
-  min-height: 100vh;
-  background: linear-gradient(180deg, #0052d9 0%, #003b9e 100%);
-  color: #fff;
-  padding: 16px 10px;
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  left: 0;
-  top: 0;
-}
-
-.sidebar-logo {
-  text-align: center;
-  margin-bottom: 24px;
-}
-
-.logo-box {
-  width: 70px;
-  height: 70px;
-  border-radius: 12px;
-  background: #ff8a00;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 8px;
-  font-size: 40px;
-}
-
-.sidebar-logo h2 {
-  margin: 0;
-  font-size: 30px;
-  font-weight: 700;
-}
-
-.sidebar-logo p {
-  margin: 4px 0 0;
-  font-size: 20px;
-  font-weight: 500;
-  opacity: 0.95;
-}
-
-.menu {
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-}
-
-.menu-item {
-  height: 44px;
-  border-radius: 8px;
-  color: #ffffff;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 22px;
-  padding: 0 20px;
-  font-size: 20px;
-  font-weight: 500;
-}
-
-.menu-item svg {
-  font-size: 25px;
-}
-
-.menu-item.active {
-  background: #1d6dff;
-}
-
-.menu-item:hover {
-  background: rgba(255, 255, 255, 0.16);
-}
-
-.logout-btn {
-  margin-top: auto;
-  height: 46px;
-  border: none;
-  background: transparent;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 0 12px;
-  font-size: 20px;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.dashboard-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.dashboard-header h1 {
-  font-size: 32px;
-  font-weight: 700;
-  color: #0b1f69;
-}
-
-.dashboard-header p {
-  font-size: 18px;
-  color: #334155;
-}
-
-.add-btn {
-  height: 48px;
-  min-width: 140px;
-  border-radius: 10px;
-  background-color: #0052ff;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.summary-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
-  margin-bottom: 20px;
-}
-
-.summary-card {
-  min-height: 105px;
-  background: #fff;
-  border-radius: 12px;
-  padding: 18px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
-}
-
-.summary-card span {
-  font-size: 16px;
-  font-weight: 500;
-}
-
-.summary-card strong {
-  font-size: 32px;
-  font-weight: 800;
-}
-
-.summary-card.all {
-  background-color: #eaf1ff;
-  color: #0052ff;
-}
-.summary-card.ready {
-  background-color: #e7f8ee;
-  color: #0aa342;
-}
-.summary-card.low {
-  background-color: #fff2df;
-  color: #ff8800;
-}
-.summary-card.empty {
-  background-color: #ffe5e5;
-  color: #f2072f;
-}
-
-.products-table-section {
-  width: 100%;
-  max-width: 100%;
-  background: #fff;
-  border-radius: 12px;
-  padding: 18px;
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
-}
-
-.table-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.table-header input {
-  width: 360px;
-  height: 48px;
-  border-radius: 10px;
-  border: 1px solid #d8e2f0;
-  padding: 0 16px;
-  font-size: 15px;
-  color: #0f172a;
-  outline: none;
-  background: #ffffff;
-}
-/* กล่องรวม dropdown + ปุ่มตัวกรอง */
-.filters {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-left: auto;
-}
-
-/* dropdown */
-.filters select {
-  height: 48px;
-  min-width: 150px;
-  border-radius: 10px;
-  border: 1px solid #d8e2f0;
-  background: #ffffff;
-  color: #0b1f69;
-  padding: 0 12px;
-  font-size: 15px;
-  font-weight: 600;
-  outline: none;
-  cursor: pointer;
-}
-
-/* ปุ่มตัวกรอง */
-.filters button {
-  height: 48px;
-  min-width: 120px;
-  border-radius: 10px;
-  border: none;
-  background: #edf4ff;
-  color: #0052ff;
-  padding: 0 14px;
-  font-size: 15px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  cursor: pointer;
-}
-
-.table-header select,
-.table-header button {
-  height: 44px;
-  border-radius: 8px;
-  font-size: 14px;
-}
-
-.product-cell {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.product-cell .icon {
-  font-size: 25px;
-}
-
-.product-cell span:not(.icon) {
-  font-size: 20px;
-  font-weight: 700;
-}
-.category-cell {
-  font-size: 25px;
-  font-weight: 700;
-}
-
-.price-cell {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.price-cell span {
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.price-cell small {
-  font-size: 14px;
-  color: #64748b;
-} 
-.stock-cell {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.stock-cell span {
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.stock-cell small {
-  font-size: 15px;
-  color: #64748b;
-}
-
-.products-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-}
-
-.products-table th {
-  background: #f7faff;
-  padding: 14px 16px;
-  text-align: left;
-  font-size: 18px;
-  font-weight: 700;
-  border-bottom: 1px solid #e5edf8;
-  color: #0b1f69;
-}
-
-.products-table td {
-  padding: 18px 16px;
-  font-size: 18px;
-  font-weight: 500;
-}
-
-.products-table td .icon {
-  margin-right: 6px;
-}
-
-td.ok {
-  color: #0aa342;
-}
-td.low {
-  color: #ff8800;
-}
-td.empty {
-  color: #f2072f;
-}
-
-.status-badge {
-  display: inline-flex;
-  min-width: 80px;
-  height: 28px;
-  border-radius: 999px;
-  align-items: center;
-  justify-content: center;
-  font-size: 15px;
-  font-weight: 800;
-}
-
-.status-badge.green {
-  color: #0aa342;
-  background: #e7f8ee;
-}
-.status-badge.orange {
-  color: #ff8800;
-  background: #fff2df;
-}
-.status-badge.red {
-  color: #f2072f;
-  background: #ffe7eb;
-}
-
-.action-row button {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  border: 1px solid transparent;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.edit-btn {
-  color: #0052ff;
-  border-color: #0052ff;
-}
-.delete-btn {
-  color: #f2072f;
-  border-color: #f2072f;
-}
-
-.table-footer {
-  margin-top: 12px;
-  font-size: 15px;
-  color: #64748b;
-}
-
- 
  /* Summary Cards */
-.summary-grid {
+ .summary-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr) !important;
   gap: 14px;
@@ -723,7 +328,6 @@ td.empty {
    901px - 1366px
 ================================== */
 @media screen and (max-width: 1366px) and (min-width: 901px) {
-  /* พื้นที่หลัก */
   .content {
     width: calc(100vw - 230px) !important;
     max-width: calc(100vw - 230px) !important;
@@ -731,7 +335,6 @@ td.empty {
     padding: 14px 16px !important;
   }
 
-  /* Sidebar */
   .sidebar {
     width: 230px !important;
   }
@@ -755,7 +358,6 @@ td.empty {
     font-size: 21px !important;
   }
 
-  /* หัวหน้า */
   .dashboard-header h1 {
     font-size: 27px !important;
   }
@@ -770,7 +372,6 @@ td.empty {
     font-size: 14px !important;
   }
 
-  /* การ์ดสรุป */
   .summary-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 10px !important;
@@ -789,178 +390,164 @@ td.empty {
     font-size: 27px !important;
   }
 
-  /* กล่องตาราง */
   .products-table-section {
     width: 100% !important;
     max-width: 100% !important;
+    overflow-x: hidden !important;
     padding: 12px !important;
-
-    /* สำคัญ: ถ้าตารางกว้าง ให้เลื่อนแนวนอน */
-    overflow-x: auto !important;
-    overflow-y: visible !important;
   }
 
-  /* ช่องค้นหาและตัวกรอง */
   .table-header {
     gap: 8px !important;
-    flex-wrap: nowrap !important;
+    margin-bottom: 14px !important;
   }
 
   .table-header input {
     width: 300px !important;
-    min-width: 220px !important;
+    min-width: 0 !important;
     height: 40px !important;
     font-size: 13px !important;
   }
 
   .filters {
     gap: 8px !important;
-    flex-wrap: nowrap !important;
+    min-width: 0 !important;
   }
 
   .filters select {
-    min-width: 145px !important;
+    min-width: 130px !important;
     height: 40px !important;
     padding: 0 8px !important;
     font-size: 13px !important;
   }
 
-  .filters button,
-  .table-header button {
+  .filters button {
     min-width: 90px !important;
     height: 40px !important;
+    padding: 0 10px !important;
     font-size: 13px !important;
   }
 
-  /* ตาราง */
   .products-table {
     width: 100% !important;
-
-    /* ไม่ให้เบราว์เซอร์บีบทุกคอลัมน์ */
-    min-width: 1050px !important;
-
-    /* ให้ความกว้างตามที่เรากำหนด */
+    min-width: 0 !important;
+    max-width: 100% !important;
     table-layout: fixed !important;
   }
 
-  .products-table th {
-    padding: 11px 6px !important;
-    font-size: 13px !important;
-    line-height: 1.35 !important;
-
-    /* ไม่ตัดคำกลางคำ */
-    word-break: normal !important;
-    overflow-wrap: normal !important;
-    white-space: normal !important;
-  }
-
+  .products-table th,
   .products-table td {
-    padding: 12px 6px !important;
-    font-size: 13px !important;
-    line-height: 1.4 !important;
-
-    /* ไม่ตัดคำทีละพยางค์ */
+    padding: 10px 4px !important;
+    font-size: 12px !important;
+    line-height: 1.35 !important;
     word-break: normal !important;
     overflow-wrap: break-word !important;
   }
 
-  /* กำหนดความกว้างแต่ละคอลัมน์ใหม่ */
   .products-table th:nth-child(1),
   .products-table td:nth-child(1) {
-    width: 90px !important;
+    width: 8% !important;
   }
 
   .products-table th:nth-child(2),
   .products-table td:nth-child(2) {
-    width: 190px !important;
+    width: 18% !important;
   }
 
   .products-table th:nth-child(3),
   .products-table td:nth-child(3) {
-    width: 110px !important;
+    width: 11% !important;
   }
 
   .products-table th:nth-child(4),
-  .products-table td:nth-child(4),
+  .products-table td:nth-child(4) {
+    width: 8% !important;
+  }
+
   .products-table th:nth-child(5),
   .products-table td:nth-child(5) {
-    width: 90px !important;
+    width: 8% !important;
   }
 
   .products-table th:nth-child(6),
-  .products-table td:nth-child(6),
+  .products-table td:nth-child(6) {
+    width: 7% !important;
+  }
+
   .products-table th:nth-child(7),
   .products-table td:nth-child(7) {
-    width: 75px !important;
+    width: 7% !important;
   }
 
   .products-table th:nth-child(8),
   .products-table td:nth-child(8) {
-    width: 105px !important;
+    width: 11% !important;
   }
 
   .products-table th:nth-child(9),
   .products-table td:nth-child(9) {
-    width: 110px !important;
+    width: 12% !important;
   }
 
   .products-table th:nth-child(10),
   .products-table td:nth-child(10) {
-    width: 90px !important;
+    width: 10% !important;
   }
 
-  /* ชื่อสินค้า */
   .product-cell {
-    gap: 8px !important;
+    gap: 6px !important;
+    min-width: 0 !important;
   }
 
   .product-cell span:not(.icon) {
-    font-size: 14px !important;
+    min-width: 0 !important;
+    font-size: 12px !important;
     line-height: 1.35 !important;
-    word-break: normal !important;
     overflow-wrap: break-word !important;
   }
 
   .category-cell {
-    font-size: 13px !important;
-    line-height: 1.35 !important;
-    word-break: normal !important;
+    font-size: 12px !important;
   }
 
-  /* ราคาและสต็อก */
   .price-cell span,
   .stock-cell span {
-    font-size: 13px !important;
+    font-size: 12px !important;
   }
 
   .price-cell small,
   .stock-cell small {
-    font-size: 11px !important;
+    font-size: 10px !important;
   }
 
-  /* รูป */
   .product-thumb,
   .product-no-image {
-    width: 42px !important;
-    height: 42px !important;
+    width: 36px !important;
+    height: 36px !important;
   }
 
-  /* สถานะ */
   .status-badge {
-    min-width: 76px !important;
-    min-height: 28px !important;
-    padding: 4px 7px !important;
-    font-size: 12px !important;
-    white-space: nowrap !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    padding: 4px 3px !important;
+    font-size: 11px !important;
+    white-space: normal !important;
   }
 
-  /* ปุ่มแก้ไขและลบ */
   .action-row {
-    gap: 5px !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 4px !important;
+    flex-wrap: nowrap !important;
   }
 
   .action-row button {
-    width: 31px !important;
-    height: 31px !important;
+    width: 28px !important;
+    min-width: 28px !important;
+    height: 28px !important;
+    padding: 0 !important;
+    flex-shrink: 0 !important;
   }
 }
