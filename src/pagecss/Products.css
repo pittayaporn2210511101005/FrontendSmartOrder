@@ -84,7 +84,7 @@
 }
 
 .menu-item:hover {
-  background: rgba(255, 8, 8, 0.987);
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .logout-btn {
@@ -181,6 +181,8 @@
 }
 
 .products-table-section {
+  width: 100%;
+  max-width: 100%;
   background: #fff;
   border-radius: 12px;
   padding: 18px;
@@ -306,6 +308,7 @@
 .products-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
 }
 
 .products-table th {
@@ -494,7 +497,7 @@ td.empty {
   background: #3b82f6;
   color: white;
   border: none;
-  border-radius: px;
+  border-radius: 10px;
   cursor: pointer;
 }
 
@@ -714,4 +717,250 @@ td.empty {
   align-items: center;
   justify-content: center;
   text-align: center;
+}
+/* ==================================
+   Products page สำหรับ Notebook
+   901px - 1366px
+================================== */
+@media screen and (max-width: 1366px) and (min-width: 901px) {
+  /* พื้นที่หลัก */
+  .content {
+    width: calc(100vw - 230px) !important;
+    max-width: calc(100vw - 230px) !important;
+    margin-left: 230px !important;
+    padding: 14px 16px !important;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 230px !important;
+  }
+
+  .sidebar-logo h2 {
+    font-size: 26px !important;
+  }
+
+  .sidebar-logo p {
+    font-size: 15px !important;
+  }
+
+  .menu-item {
+    height: 43px !important;
+    padding: 0 14px !important;
+    gap: 12px !important;
+    font-size: 16px !important;
+  }
+
+  .menu-item svg {
+    font-size: 21px !important;
+  }
+
+  /* หัวหน้า */
+  .dashboard-header h1 {
+    font-size: 27px !important;
+  }
+
+  .dashboard-header p {
+    font-size: 15px !important;
+  }
+
+  .add-btn {
+    height: 42px !important;
+    min-width: 130px !important;
+    font-size: 14px !important;
+  }
+
+  /* การ์ดสรุป */
+  .summary-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .summary-card {
+    min-height: 88px !important;
+    padding: 12px !important;
+  }
+
+  .summary-card span {
+    font-size: 14px !important;
+  }
+
+  .summary-card strong {
+    font-size: 27px !important;
+  }
+
+  /* กล่องตาราง */
+  .products-table-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 12px !important;
+
+    /* สำคัญ: ถ้าตารางกว้าง ให้เลื่อนแนวนอน */
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+  }
+
+  /* ช่องค้นหาและตัวกรอง */
+  .table-header {
+    gap: 8px !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .table-header input {
+    width: 300px !important;
+    min-width: 220px !important;
+    height: 40px !important;
+    font-size: 13px !important;
+  }
+
+  .filters {
+    gap: 8px !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .filters select {
+    min-width: 145px !important;
+    height: 40px !important;
+    padding: 0 8px !important;
+    font-size: 13px !important;
+  }
+
+  .filters button,
+  .table-header button {
+    min-width: 90px !important;
+    height: 40px !important;
+    font-size: 13px !important;
+  }
+
+  /* ตาราง */
+  .products-table {
+    width: 100% !important;
+
+    /* ไม่ให้เบราว์เซอร์บีบทุกคอลัมน์ */
+    min-width: 1050px !important;
+
+    /* ให้ความกว้างตามที่เรากำหนด */
+    table-layout: fixed !important;
+  }
+
+  .products-table th {
+    padding: 11px 6px !important;
+    font-size: 13px !important;
+    line-height: 1.35 !important;
+
+    /* ไม่ตัดคำกลางคำ */
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    white-space: normal !important;
+  }
+
+  .products-table td {
+    padding: 12px 6px !important;
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+
+    /* ไม่ตัดคำทีละพยางค์ */
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  /* กำหนดความกว้างแต่ละคอลัมน์ใหม่ */
+  .products-table th:nth-child(1),
+  .products-table td:nth-child(1) {
+    width: 90px !important;
+  }
+
+  .products-table th:nth-child(2),
+  .products-table td:nth-child(2) {
+    width: 190px !important;
+  }
+
+  .products-table th:nth-child(3),
+  .products-table td:nth-child(3) {
+    width: 110px !important;
+  }
+
+  .products-table th:nth-child(4),
+  .products-table td:nth-child(4),
+  .products-table th:nth-child(5),
+  .products-table td:nth-child(5) {
+    width: 90px !important;
+  }
+
+  .products-table th:nth-child(6),
+  .products-table td:nth-child(6),
+  .products-table th:nth-child(7),
+  .products-table td:nth-child(7) {
+    width: 75px !important;
+  }
+
+  .products-table th:nth-child(8),
+  .products-table td:nth-child(8) {
+    width: 105px !important;
+  }
+
+  .products-table th:nth-child(9),
+  .products-table td:nth-child(9) {
+    width: 110px !important;
+  }
+
+  .products-table th:nth-child(10),
+  .products-table td:nth-child(10) {
+    width: 90px !important;
+  }
+
+  /* ชื่อสินค้า */
+  .product-cell {
+    gap: 8px !important;
+  }
+
+  .product-cell span:not(.icon) {
+    font-size: 14px !important;
+    line-height: 1.35 !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .category-cell {
+    font-size: 13px !important;
+    line-height: 1.35 !important;
+    word-break: normal !important;
+  }
+
+  /* ราคาและสต็อก */
+  .price-cell span,
+  .stock-cell span {
+    font-size: 13px !important;
+  }
+
+  .price-cell small,
+  .stock-cell small {
+    font-size: 11px !important;
+  }
+
+  /* รูป */
+  .product-thumb,
+  .product-no-image {
+    width: 42px !important;
+    height: 42px !important;
+  }
+
+  /* สถานะ */
+  .status-badge {
+    min-width: 76px !important;
+    min-height: 28px !important;
+    padding: 4px 7px !important;
+    font-size: 12px !important;
+    white-space: nowrap !important;
+  }
+
+  /* ปุ่มแก้ไขและลบ */
+  .action-row {
+    gap: 5px !important;
+  }
+
+  .action-row button {
+    width: 31px !important;
+    height: 31px !important;
+  }
 }

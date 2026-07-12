@@ -888,9 +888,7 @@ textarea {
   }
 }
 
-/* ==================================
-   Notebook 1366 x 768
-================================== */
+/* Notebook 1366 x 768*/
 @media screen and (max-width: 1366px) and (min-width: 901px) {
   html,
   body {
