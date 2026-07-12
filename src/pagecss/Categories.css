@@ -536,42 +536,7 @@ body {
 
 /* ===== Responsive ===== */
 
-@media (max-width: 780px) {
-  .cat-header {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .cat-add-btn {
-    width: 100%;
-    border-radius: 10px;
-  }
-
-  .cat-summary-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .cat-table-card {
-    overflow-x: auto;
-  }
-
-  .cat-table {
-    min-width: 850px;
-  }
-
-  .cat-search-box {
-    width: 100%;
-  }
-
-  .cat-table-toolbar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  /* ==================================
-   Categories สำหรับ Notebook
-   901px - 1366px
-================================== */
+/* Notebook / Laptop: ให้ Sidebar เหมือนหน้า Products */
 @media screen and (max-width: 1366px) and (min-width: 901px) {
   html,
   body {
@@ -587,11 +552,17 @@ body {
     overflow-x: hidden;
   }
 
-  /* ===== Sidebar ===== */
-
   .cat-sidebar {
     width: 230px;
     padding: 12px 9px;
+  }
+
+  .cat-content {
+    width: calc(100vw - 230px);
+    max-width: calc(100vw - 230px);
+    margin-left: 230px;
+    padding: 12px 14px;
+    overflow-x: hidden;
   }
 
   .cat-sidebar-logo {
@@ -606,14 +577,16 @@ body {
 
   .cat-sidebar-logo h2 {
     font-size: 26px;
+    font-weight: 800;
   }
 
   .cat-sidebar-logo p {
     font-size: 15px;
+    font-weight: 600;
   }
 
   .cat-menu {
-    gap: 6px;
+    gap: 5px;
   }
 
   .cat-menu-item {
@@ -621,6 +594,7 @@ body {
     gap: 12px;
     padding: 0 13px;
     font-size: 16px;
+    font-weight: 600;
   }
 
   .cat-menu-item svg {
@@ -631,19 +605,8 @@ body {
   .cat-logout-btn {
     height: 42px;
     font-size: 16px;
+    font-weight: 600;
   }
-
-  /* ===== Content ===== */
-
-  .cat-content {
-    width: calc(100vw - 230px);
-    max-width: calc(100vw - 230px);
-    margin-left: 230px;
-    padding: 12px 14px;
-    overflow-x: hidden;
-  }
-
-  /* ===== Header ===== */
 
   .cat-header {
     gap: 12px;
@@ -665,8 +628,6 @@ body {
     padding: 0 12px;
     font-size: 14px;
   }
-
-  /* ===== Summary ===== */
 
   .cat-summary-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -702,8 +663,6 @@ body {
     font-size: 13px;
   }
 
-  /* ===== Table Card ===== */
-
   .cat-table-card {
     width: 100%;
     max-width: 100%;
@@ -720,14 +679,11 @@ body {
     max-width: 100%;
     height: 40px;
     padding: 0 12px;
-    font-size: 13px;
   }
 
   .cat-search-box input {
     font-size: 13px;
   }
-
-  /* ===== Table ===== */
 
   .cat-table {
     width: 100%;
@@ -752,31 +708,26 @@ body {
     overflow-wrap: break-word;
   }
 
-  /* ลำดับ */
   .cat-table th:nth-child(1),
   .cat-table td:nth-child(1) {
     width: 10%;
   }
 
-  /* ชื่อหมวดหมู่ */
   .cat-table th:nth-child(2),
   .cat-table td:nth-child(2) {
     width: 34%;
   }
 
-  /* จำนวนสินค้า */
   .cat-table th:nth-child(3),
   .cat-table td:nth-child(3) {
     width: 17%;
   }
 
-  /* วันที่สร้าง */
   .cat-table th:nth-child(4),
   .cat-table td:nth-child(4) {
     width: 23%;
   }
 
-  /* จัดการ */
   .cat-table th:nth-child(5),
   .cat-table td:nth-child(5) {
     width: 16%;
@@ -785,8 +736,6 @@ body {
   .cat-category-name {
     font-size: 14px;
     line-height: 1.35;
-    word-break: normal;
-    overflow-wrap: break-word;
   }
 
   .cat-count-text,
@@ -813,8 +762,6 @@ body {
     font-size: 12px;
   }
 
-  /* ===== Modal ===== */
-
   .cat-modal-card {
     max-width: 440px;
     padding: 24px;
@@ -830,4 +777,63 @@ body {
     font-size: 21px;
   }
 }
+
+/* Tablet / Mobile */
+@media screen and (max-width: 900px) {
+  .cat-sidebar {
+    width: 220px;
+  }
+
+  .cat-content {
+    width: calc(100vw - 220px);
+    margin-left: 220px;
+    padding: 14px;
+  }
+
+  .cat-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .cat-add-btn {
+    width: 100%;
+  }
+
+  .cat-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cat-table-card {
+    overflow-x: auto;
+  }
+
+  .cat-table {
+    min-width: 760px;
+  }
+
+  .cat-search-box {
+    width: 100%;
+  }
+
+  .cat-table-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .cat-page {
+    display: block;
+  }
+
+  .cat-sidebar {
+    position: static;
+    width: 100%;
+    min-height: auto;
+  }
+
+  .cat-content {
+    width: 100%;
+    margin-left: 0;
+  }
 }
