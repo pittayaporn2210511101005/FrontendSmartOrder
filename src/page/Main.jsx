@@ -21,8 +21,7 @@ import {
 
 import "../pagecss/Main.css";
 
-     
-
+function Main({ onLogout }) {
   const PRODUCT_API = "/admin/products";
   const ORDER_API = "/mobile/orders";
 
@@ -1117,6 +1116,6 @@ import "../pagecss/Main.css";
       </main>
     </div>
   );
-
+}
 
 export default Main;
