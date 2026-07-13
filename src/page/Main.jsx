@@ -21,7 +21,7 @@ import {
 
 import "../pagecss/Main.css";
 
-function Main({ onLogout }) {
+     
 
   const PRODUCT_API = "/admin/products";
   const ORDER_API = "/mobile/orders";
@@ -135,7 +135,7 @@ function Main({ onLogout }) {
 
   const lowStockCount = products.filter((product) => {
     const totalStock = getTotalStock(product);
-    const minStockQty = Number(product.minStockQty || 10);
+    const minStockQty = Number(product.minStockQty);
 
     return totalStock > 0 && totalStock <= minStockQty;
   }).length;
@@ -1117,6 +1117,6 @@ function Main({ onLogout }) {
       </main>
     </div>
   );
-}
+
 
 export default Main;

@@ -93,6 +93,7 @@ function Categories({onLogout}) {
     return String(name || "").trim().toLowerCase();
   };
 
+  //ตรวจชื่อซ้ำไหม
   const isDuplicateCategoryName = (name) => {
     const newName = normalizeCategoryName(name);
 
