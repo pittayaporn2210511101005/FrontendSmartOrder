@@ -30,7 +30,6 @@ function MockSales({onLogout}) {
     saleMonth: "",
     saleYear: "2026",
     saleTime: "12:00",
-    mobileId: "Mater",
     stockType: "store",
   });
 
@@ -117,7 +116,6 @@ function MockSales({onLogout}) {
       saleMonth: "",
       saleYear: "2026",
       saleTime: "12:00",
-      mobileId: "Mater",
       stockType: "store",
     });
 
@@ -236,9 +234,8 @@ function MockSales({onLogout}) {
     const saleDate = getSaleDate();
     const createdAt = `${saleDate}T${formData.saleTime}:00`;
 
-    const payload = {
+    const payload = {//สร้างฟอร์ม
       createdAt,
-      mobileId: formData.mobileId,
       stockType: formData.stockType,
       items: items
         .filter((item) => item.productId && Number(item.quantity) > 0)
