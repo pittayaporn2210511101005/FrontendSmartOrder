@@ -465,7 +465,7 @@ function Main({ onLogout }) {
         totalSellOrder += totalSell;
 
         rows.push([
-          index === 0 ? orderDate : "",
+          index === 0 ? orderDate : "",//ถ้าเป็นสินค้าชิ้นแรกของออเดอร์ให้แสดงวัวนที่
           index === 0 ? orderNo : "",
           productName,
           quantity,
@@ -516,10 +516,10 @@ function Main({ onLogout }) {
       ...rows,
     ];
 
-    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);//1
 
     worksheet["!cols"] = [
-      { wch: 14 },
+      { wch: 14 },//คอลัมA
       { wch: 18 },
       { wch: 30 },
       { wch: 10 },
@@ -532,7 +532,7 @@ function Main({ onLogout }) {
       { wch: 20 },
     ];
 
-    const workbook = XLSX.utils.book_new();
+    const workbook = XLSX.utils.book_new();//2
 
     if (reportMode === "year") {
       XLSX.utils.book_append_sheet(workbook, worksheet, "รายงานละเอียดรายปี");
@@ -543,7 +543,7 @@ function Main({ onLogout }) {
         worksheet,
         "รายงานละเอียดรายเดือน"
       );
-      XLSX.writeFile(
+      XLSX.writeFile(//สร้างและดาวโหลดไฟล์ออกมาเป็ฯfile real
         workbook,
         `รายงานละเอียดรายเดือน-${selectedMonth + 1}-${selectedYear + 543}.xlsx`
       );
@@ -585,7 +585,7 @@ function Main({ onLogout }) {
         font-weight:bold;
       ">
         รายงานยอดขาย : ${getReportTitle()}
-        &nbsp;&nbsp; วันที่ออกรายงาน: ${reportDate}
+        &nbsp;&nbsp; วันที่ออกรายงาน: ${reportDate} 
       </h2>
 
       ${
