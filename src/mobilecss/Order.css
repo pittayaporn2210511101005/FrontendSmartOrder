@@ -112,7 +112,7 @@
   .mobile-category-tabs {
     display: flex;
     gap: 10px;
-    overflow-x: auto;
+    overflow-x: auto; /*ตั้งค่าแนวนอนเลื่อนได้*/
     padding: 2px 0 16px;
     scrollbar-width: none;
   }
@@ -126,7 +126,7 @@
     min-width: 92px;
     height: 48px;
     border: none;
-    border-radius: 18px;
+    border-radius: 18px;/*มุมขอบมน*/
     background: #eef2f8;
     color: #07164a;
     padding: 0 18px;
@@ -619,13 +619,13 @@
     overflow: hidden;
   }
   
-  /* ยังไม่อ่าน = ฟ้าอ่อน */
+  /* ยังไม่อ่าน  ฟ้าอ่อน */
   .mobile-noti-card.unread {
     background: #eff6ff;
     border-color: #93c5fd;
   }
   
-  /* อ่านแล้ว = พื้นหลังขาว แต่ยังแสดงอยู่ */
+  /* อ่านแล้ว  พื้นหลังขาว แต่ยังแสดงอยู่ */
   .mobile-noti-card.read {
     background: #ffffff;
     border-color: #e2e8f0;
